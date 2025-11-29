@@ -1,9 +1,9 @@
-import {Reader, UpdateReaderDTO} from "../model/reader.js";
+import {User, UpdateUserDTO} from "../model/user.js";
 
 export interface AccountService {
-    createAccount: (reader: Reader) => Promise<void>;
-    getAccountById: (id: number) => Promise<Reader>;
-    removeAccount: (id: number) => Promise<Reader>;
-    changePassword: (id: number, newPassword: string) => Promise<void>;
-    editAccount: (id:number, newReaderData: UpdateReaderDTO) => Promise<Reader>;
+    createAccount: (reader: User) => Promise<void>;
+    getAccountById: (id: number) => Promise<User>;
+    removeAccount: (id: number) => Promise<User>;
+    changePassword: (id: number, oldPassword: string, newPassword: string) => Promise<void>;
+    editAccount: (id:number, newReaderData: UpdateUserDTO) => Promise<User>;
 }

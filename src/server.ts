@@ -2,8 +2,10 @@ import express from 'express';
 import {errorHandler} from "./errorHandler/errorHandler.js";
 import {loggerWinston} from "./winston/logger.js";
 import {apiRouter} from "./routers/apiRouter.js";
-import {PORT} from "./configuration/appConfig.js";
+import {pathRoles, PORT, skipRoutesArr} from "./configuration/appConfig.js";
 import {accountRouter} from "./routers/accountRouter.js";
+import {authenticate, skipRoutes} from "./middleware/authentication.js";
+import {accountServiceMongo} from "./service/AccountServiceImpMongo.js";
 
 export const launchServer = async () => {
     const app = express();
@@ -14,6 +16,8 @@ export const launchServer = async () => {
     });
 
     //============middleware========
+    app.use(authenticate(accountServiceMongo));
+    app.use(skipRoutes(skipRoutesArr, pathRoles))
     app.use(express.json())
     //============routers=====
     app.use('/api', apiRouter)

@@ -1,10 +1,14 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
 import {booksDatabase} from "../app.js";
 import {JsonDB} from "node-json-db";
 import {HttpError} from "../errorHandler/HttpError.js";
+import {AccountService} from "./iAccountService.js";
+import {accountServiceMongo} from "./AccountServiceImpMongo.js";
 
 export class BookServiceJSON implements BookService{
+    private service: AccountService = accountServiceMongo;
+
     async addBook(book: Book): Promise<void> {
         const jsonDB = booksDatabase as JsonDB;
         await jsonDB.push(`/books[]`, book).catch( err => {
@@ -13,15 +17,27 @@ export class BookServiceJSON implements BookService{
         return Promise.resolve();
     }
 
-    async getAllBooks(): Promise<Book[]> {
+    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
         const jsonDB = booksDatabase as JsonDB;
-        const result = await jsonDB.getData('/books').catch(err => {
+        const books: Book[] = await jsonDB.getData('/books').catch(err => {
             throw new Error('database error: ' + err.message + '@getAllBooks');
         });
-        return Promise.resolve(result);
+        if(excess)
+            return Promise.resolve(books);
+        else {
+            const booksLite: BookLite[] = [];
+            books.forEach(book => {
+                booksLite.push({title: book.title,
+                    author: book.author,
+                    genre: book.genre,
+                    year: book.year,
+                    status: book.status,});
+            })
+            return booksLite;
+        }
     }
 
-    async getBooks(path: string, property: string, value: string): Promise<Book[]> {
+    async getBooks(path: string, property: string, value: string, excess: boolean): Promise<Book[] | BookLite[]> {
         try {
             const jsonDB = booksDatabase as JsonDB;
             const books: Book[] = [];
@@ -32,26 +48,39 @@ export class BookServiceJSON implements BookService{
                     books.push(book);
                 }
             }
-            return Promise.resolve(books);
+            if(excess)
+                return Promise.resolve(books);
+            else {
+                const booksLite: BookLite[] = [];
+                books.forEach(book => {
+                    booksLite.push({title: book.title,
+                        author: book.author,
+                        genre: book.genre,
+                        year: book.year,
+                        status: book.status,});
+                })
+                return booksLite;
+            }
         } catch (err) {
             throw new Error('database error');
         }
     }
 
-    async getBooksByAuthor(author: string): Promise<Book[]> {
-        return await this.getBooks('/books', 'author', author).catch(err => {
+    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBooks('/books', 'author', author, excess).catch(err => {
             throw new Error(err.message + '@getBooksByAuthor');
         });
     }
 
-    async getBooksByGenre(genre: string): Promise<Book[]> {
-        return await this.getBooks('/books', 'genre', genre).catch(err => {
+    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBooks('/books', 'genre', genre, excess).catch(err => {
             throw new Error(err.message + '@getBooksByGenre');
         });
     }
 
-    async pickBook(bookId: string, readerName: string, readerId: number): Promise<void> {
+    async pickBook(bookId: string, readerId: number): Promise<void> {
         try {
+            const account = await this.service.getAccountById(readerId);
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
@@ -63,8 +92,8 @@ export class BookServiceJSON implements BookService{
                 throw new HttpError(409, `book with id ${bookId} is removed and can't be picked`, '@pickBook');
             await jsonDB.push(`/books[${index}]/status`, BookStatus.ON_HAND);
             await jsonDB.push(`/books[${index}]/pickList[]`, {
-                readerId: readerId,
-                readerName: readerName,
+                readerId: account._id,
+                readerName: account.userName,
                 pickDate: new Date().toLocaleDateString(),
                 returnDate: null
             })

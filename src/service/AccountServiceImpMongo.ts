@@ -1,60 +1,64 @@
 import {AccountService} from "./iAccountService.js";
-import {Reader, UpdateReaderDTO} from "../model/reader.js";
+import {User, UpdateUserDTO} from "../model/user.js";
 import {accountDatabase} from "../app.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 class AccountServiceImpMongo implements AccountService {
-    async changePassword(readerId: number, newPassHash: string): Promise<void> {
-        const docReader = await this.getAccount(readerId, '@changePassword');
-        docReader.passHash = newPassHash;
-        await docReader.save().catch(err => {
+
+    async changePassword(userId: number, oldPassword: string, newPassword: string): Promise<void> {
+        const userDoc = await this.getAccount(userId, '@changePassword');
+        if(!bcrypt.compareSync(oldPassword, userDoc.passHash))
+            throw new HttpError(401, "wrong credentials", '@changePassword');
+        userDoc.passHash = bcrypt.hashSync(newPassword, 10);
+        await userDoc.save().catch(err => {
             throw new Error('database error: ' + err.message + '@changePassword');
         });
     }
 
-    async createAccount(reader: Reader): Promise<void> {
-        await accountDatabase.create({...reader, _id: reader._id}).catch(err => {
+    async createAccount(user: User): Promise<void> {
+        await accountDatabase.create({...user, _id: user._id}).catch(err => {
             if(err.code === 11000) throw new HttpError(409, 'duplicate readerId, account not created','@createAccount')
             else throw new Error('database error: ' + err.message + '@createAccount')
         })
         return Promise.resolve();
     }
 
-    async editAccount(readerId: number, newReaderData: UpdateReaderDTO): Promise<Reader> {
-        const docReader = await this.getAccount(readerId, '@editAccount')
-        docReader.userName = newReaderData.userName || docReader.userName;
-        docReader.email = newReaderData.email || docReader.email;
-        docReader.birthDate = newReaderData.birthDate || docReader.birthDate;
-        await docReader.save().catch(err => {
+    async editAccount(userId: number, newUserData: UpdateUserDTO): Promise<User> {
+        const userDoc = await this.getAccount(userId, '@editAccount')
+        userDoc.userName = newUserData.userName || userDoc.userName;
+        userDoc.email = newUserData.email || userDoc.email;
+        userDoc.birthDate = newUserData.birthDate || userDoc.birthDate;
+        userDoc.roles = newUserData.roles || userDoc.roles;
+        await userDoc.save().catch(err => {
             throw new Error('database error: ' + err.message + '@updateAccount');
         });
-        return docReader;
+        return userDoc;
     }
 
-    async getAccount(readerId: number, source: string) {
-        const database = accountDatabase as mongoose.Model<Reader>;
-        const docReader = await database.findById(readerId).then(doc => doc)
+    async getAccount(userId: number, source: string) {
+        const database = accountDatabase as mongoose.Model<User>;
+        const userDoc = await database.findById(userId).then(doc => doc)
             .catch((err) => {
             throw new Error('database error: ' + err.message + source)
         });
-        if (!docReader)
-            throw new HttpError(409, `account with id ${readerId} is not found`, source);
-        return docReader;
+        if (!userDoc)
+            throw new HttpError(404, `account with id ${userId} is not found`, source);
+        return userDoc;
     }
 
-    async getAccountById(readerId: number): Promise<Reader> {
-        return await this.getAccount(readerId, 'getAccountById');
+    async getAccountById(userId: number): Promise<User> {
+        return await this.getAccount(userId, '@getAccountById');
     }
 
-    async removeAccount(readerId: number): Promise<Reader> {
-        const docReader = await this.getAccount(readerId, '@removeAccount');
-        await docReader.deleteOne().catch(err => {
+    async removeAccount(userId: number): Promise<User> {
+        const userDoc = await this.getAccount(userId, '@removeAccount');
+        await userDoc.deleteOne().catch(err => {
             throw new Error('database error: ' + err.message + '@removeAccount');
         });
-        return docReader;
+        return userDoc;
     }
-
 }
 
 export const accountServiceMongo = new AccountServiceImpMongo();

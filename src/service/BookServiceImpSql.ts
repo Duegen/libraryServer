@@ -1,11 +1,15 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import {RowDataPacket} from "mysql2";
 import {booksDatabase} from "../app.js";
 import {Pool} from "mysql2/promise";
+import {AccountService} from "./iAccountService.js";
+import {accountServiceMongo} from "./AccountServiceImpMongo.js";
 
 export class BookServiceImpSql implements BookService {
+    private service: AccountService = accountServiceMongo;
+
     async addBook(book: Book): Promise<void> {
         const pool = booksDatabase as Pool;
         await pool.query(`INSERT INTO books VALUES(?,?,?,?,?,?)`,
@@ -29,9 +33,9 @@ export class BookServiceImpSql implements BookService {
         }));
     }
 
-    async getBook(query: string, source: string) {
+    async getBook(query: string, source: string, excess: boolean) {
         const pool = booksDatabase as Pool;
-        const result = await pool.query<RowDataPacket[]>(query).then(async data => {
+        const books = await pool.query<RowDataPacket[]>(query).then(async data => {
             const [result] = data;
             return result.map(async book => {
                 book = {...book, pickList: []};
@@ -40,22 +44,33 @@ export class BookServiceImpSql implements BookService {
                 return book;
             })
         }).catch((err) => {
-            if(err instanceof HttpError) throw new HttpError(409, err.message, source);
-            else throw new Error(err.message);
+            throw new Error(err.message + source);
         })
-        return Promise.resolve(await Promise.all(result) as Book[]);
+        const result = await Promise.all(books) as Book[];
+        if(excess) return Promise.resolve(result);
+        else {
+            const booksLite: BookLite[] = [];
+            result.forEach(book => {
+                booksLite.push({title: book.title,
+                    author: book.author,
+                    genre: book.genre,
+                    year: book.year,
+                    status: book.status,});
+            })
+            return Promise.resolve(booksLite);
+        }
     }
 
-    async getAllBooks(): Promise<Book[]> {
-        return await this.getBook('SELECT * FROM books', '@getAllBooks');
+    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBook('SELECT * FROM books', '@getAllBooks', excess);
     }
 
-    async getBooksByGenre(genre: string): Promise<Book[]> {
-        return await this.getBook(`SELECT * FROM books WHERE genre = '${genre}'`, '@getBooksByGenre');
+    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBook(`SELECT * FROM books WHERE genre = '${genre}'`, '@getBooksByGenre', excess);
     }
 
-    async getBooksByAuthor(author: string): Promise<Book[]> {
-        return await this.getBook(`SELECT * FROM books WHERE author = '${author}'`, '@getBooksByAuthor');
+    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBook(`SELECT * FROM books WHERE author = '${author}'`, '@getBooksByAuthor', excess);
     }
 
     async removeBook(bookId: string): Promise<Book> {
@@ -142,8 +157,9 @@ export class BookServiceImpSql implements BookService {
         return Promise.resolve(book as Book);
     }
 
-    async pickBook(bookId: string, readerName: string, readerId: number): Promise<void> {
+    async pickBook(bookId: string, readerId: number): Promise<void> {
         const pool = booksDatabase as Pool;
+        const account = await this.service.getAccountById(readerId);
         await pool.query<RowDataPacket[]>('SELECT * FROM books WHERE bookId = ?', bookId).then(async data => {
             const [result] = data;
             if (result.length) {
@@ -155,8 +171,8 @@ export class BookServiceImpSql implements BookService {
                     .catch(() => {
                         throw new Error('database connection error@pickBook')
                     });
-                await pool.query('INSERT INTO readers VALUES(?,?) ON DUPLICATE KEY UPDATE readerName=?',
-                    [readerId, readerName, readerName])
+                await pool.query('INSERT IGNORE INTO readers VALUES(?,?)',
+                    [account._id, account.userName])
                     .catch(() => {
                         throw new Error('database connection error@pickBook')
                     });

@@ -1,34 +1,51 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
 import {booksDatabase} from "../app.js";
 import * as mongoose from "mongoose";
 import {v4 as uuidv4} from 'uuid';
 import {HttpError} from "../errorHandler/HttpError.js";
+import {AccountService} from "./iAccountService.js";
+import {accountServiceMongo} from "./AccountServiceImpMongo.js";
+import {Role} from "../utils/libTypes.js";
 
 class BookServiceImpMongo implements BookService {
-    async getBooks(options: Object){
+    private service: AccountService = accountServiceMongo;
+
+    async getBooks(options: Object, excess: boolean): Promise<Book[] | BookLite[]>{
         const model = booksDatabase as mongoose.Model<Book>
-        return await model.find(options)
-            .then(data => data)
+        const books = await model.find(options)
             .catch((err) => {
                 throw new Error('database error: ' + err.message);
             });
+        if(excess)
+            return books
+        else{
+            const booksLite: BookLite[] = [];
+            books.forEach(book => {
+                booksLite.push({title: book.title,
+                    author: book.author,
+                    genre: book.genre,
+                    year: book.year,
+                    status: book.status,});
+            })
+            return booksLite;
+        }
     }
 
-    async getAllBooks(): Promise<Book[]> {
-        return await this.getBooks({}).then(data => data).catch(err => {
+    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBooks({}, excess).then(data => data).catch(err => {
             throw new Error(err.message + '@getAllBooks');
         });
     }
 
-    async getBooksByAuthor(author: string): Promise<Book[]> {
-        return await this.getBooks({author: author}).then(data => data).catch(err => {
+    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBooks({author: author}, excess).then(data => data).catch(err => {
             throw new Error(err.message + '@getBooksByAuthor');
         });
     }
 
-    async getBooksByGenre(genre: string): Promise<Book[]> {
-        return await this.getBooks({genre:genre}).then(data => data).catch(err => {
+    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
+        return await this.getBooks({genre:genre}, excess).then(data => data).catch(err => {
             throw new Error(err.message + '@getBooksByGenre');
         });
     }
@@ -95,16 +112,19 @@ class BookServiceImpMongo implements BookService {
         return Promise.resolve(bookDoc as Book);
     }
 
-    async pickBook(bookId: string, readerName: string, readerId: number): Promise<void> {
+    async pickBook(bookId: string, readerId: number): Promise<void> {
+        const account = await this.service.getAccountById(readerId);
         const bookDoc = await this.getBookById(bookId, '@pickBook');
         if (bookDoc.status === BookStatus.REMOVED)
             throw new HttpError(409, `book with id ${bookId} is removed and can't be picked`,`@pickBook`);
         if (bookDoc.status === BookStatus.ON_HAND)
             throw new HttpError(409, `book with id ${bookId} is already on hand`,`@pickBook`)
+        if(!account.roles.includes(Role.READER))
+            throw new HttpError(409, `user is not reader`,`@pickBook`)
         bookDoc.status = BookStatus.ON_HAND;
         bookDoc.pickList.push({
-            readerId: readerId,
-            readerName: readerName,
+            readerId: account._id,
+            readerName: account.userName,
             pickDate: new Date().toLocaleDateString(),
             returnDate: null
         })

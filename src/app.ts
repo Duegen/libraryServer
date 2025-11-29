@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import {bookDb, booksDatabaseConnect} from "./database/booksDatabaseConfig.js";
 import {JsonDB} from "node-json-db";
 import {accountMongoSchema, mongoConnect} from "./database/databaseMongoConnect.js";
-import {Reader} from "./model/reader.js";
 
 export const accountDatabase: mongoose.Model<any> = await mongoConnect(process.env.MONGO_CLUSTER || '',
     process.env.MONGO_DATABASE || '', process.env.ACCOUNTS_MONGO_COLLECTION || '', accountMongoSchema)

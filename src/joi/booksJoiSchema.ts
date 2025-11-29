@@ -4,7 +4,7 @@ import {BookGenres} from "../model/book.js";
 
 const Joi = BaseJoi.extend(JoiDate as unknown as Extension) as Root
 
-export const bookDtoShema = Joi.object({
+export const bookDtoSchema = Joi.object({
     title: Joi.string().min(2).max(30).required(),
     author: Joi.string().min(2).max(30).required(),
     genre: Joi.string().valid(...Object.values(BookGenres)).required(),
@@ -12,25 +12,24 @@ export const bookDtoShema = Joi.object({
     quantity: Joi.number().min(1).positive().max(100).optional(),
 })
 
-export const bookGenreShema = Joi.object({
+export const bookGenreSchema = Joi.object({
     genre: Joi.string().valid(...Object.values(BookGenres)).required(),
 })
 
-export const bookIdShema = Joi.object({
+export const bookIdSchema = Joi.object({
     bookId: Joi.string().required(),
 })
 
-export const bookPicShema = Joi.object({
+export const bookPicSchema = Joi.object({
     bookId: Joi.string().required(),
-    readerName: Joi.string().min(3).required(),
-    readerId: Joi.number().integer().min(1).required(),
+    readerId: Joi.number().integer().min(100000000).max(999999999).integer().required(),
 })
 
-export const bookAuthorShema = Joi.object({
+export const bookAuthorSchema = Joi.object({
     author: Joi.string().required(),
 })
 
-export const bookShema = Joi.object({
+export const bookSchema = Joi.object({
     _id: Joi.string().required(),
     title: Joi.string().min(2).max(30).optional(),
     author: Joi.string().min(2).max(30).optional(),

@@ -17,6 +17,14 @@ export type Book = {
     quantity?: number,
 }
 
+export type BookLite = {
+    title: string,
+    author: string,
+    genre: BookGenres,
+    year: number,
+    status: BookStatus,
+}
+
 export type BookEdit = {
     _id: string,
     title?: string,
