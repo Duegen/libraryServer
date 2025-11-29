@@ -13,6 +13,21 @@
 				{
 					"name": "getAllBooks",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -33,6 +48,21 @@
 				{
 					"name": "getBooksByGenre",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "333333333",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "333333333",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -55,6 +85,21 @@
 				{
 					"name": "getBookByAuthor",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -77,6 +122,21 @@
 				{
 					"name": "addBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -106,10 +166,25 @@
 				{
 					"name": "pickBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/pick?bookId=3d5b1a64-5e2b-4f29-a169-dab29149d9a1&readerId=1&readerName=Piter",
+							"raw": "http://localhost:3050/api/books/pick?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f&readerId=333333333",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -123,15 +198,11 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "3d5b1a64-5e2b-4f29-a169-dab29149d9a1"
+									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
 								},
 								{
 									"key": "readerId",
-									"value": "1"
-								},
-								{
-									"key": "readerName",
-									"value": "Piter"
+									"value": "333333333"
 								}
 							]
 						}
@@ -141,10 +212,25 @@
 				{
 					"name": "returnBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/return?bookId=3d5b1a64-5e2b-4f29-a169-dab29149d9a1",
+							"raw": "http://localhost:3050/api/books/return?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -158,7 +244,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "3d5b1a64-5e2b-4f29-a169-dab29149d9a1"
+									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
 								}
 							]
 						}
@@ -168,10 +254,25 @@
 				{
 					"name": "restoreBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/restore?bookId=e1ef0f50-598b-49ec-83cd-599950542279",
+							"raw": "http://localhost:3050/api/books/restore?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -185,7 +286,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "e1ef0f50-598b-49ec-83cd-599950542279"
+									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
 								}
 							]
 						}
@@ -195,11 +296,26 @@
 				{
 					"name": "editBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"_id\": \"e1ef0f50-598b-49ec-83cd-599950542279\",\r\n    \"title\": \"Farenheit 451\",\r\n    \"author\": \"Bradbary\"\r\n}",
+							"raw": "{\r\n    \"_id\": \"13ec358b-eff2-455d-b4d0-3564d070f55f\",\r\n    \"title\": \"Farenheit 451\",\r\n    \"author\": \"Bradbary\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,10 +340,25 @@
 				{
 					"name": "removeBook",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "222222222",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "222222222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books?bookId=e1ef0f50-598b-49ec-83cd-599950542279b",
+							"raw": "http://localhost:3050/api/books?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -240,7 +371,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "e1ef0f50-598b-49ec-83cd-599950542279b"
+									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
 								}
 							]
 						}
@@ -255,6 +386,21 @@
 				{
 					"name": "getLogFile",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "111111111",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -275,6 +421,21 @@
 				{
 					"name": "getLogByDate",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "111111111",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -310,6 +471,21 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "111111111",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -317,7 +493,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/byId?readerId=1",
+							"raw": "http://localhost:3050/account/byId?userId=333333333",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -329,8 +505,8 @@
 							],
 							"query": [
 								{
-									"key": "readerId",
-									"value": "1"
+									"key": "userId",
+									"value": "333333333"
 								}
 							]
 						}
@@ -344,7 +520,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"readerId\": 1,\r\n    \"userName\": \"Node.js\",\r\n    \"email\": \"email@gmail.com\",\r\n    \"password\": \"qwerty\",\r\n    \"birthDate\": \"27.05.2009\"\r\n}",
+							"raw": "{\r\n    \"userId\": 444444444,\r\n    \"userName\": \"Uri\",\r\n    \"email\": \"uri_email@gmail.com\",\r\n    \"password\": \"444444444\",\r\n    \"birthDate\": \"17.11.2001\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,6 +544,21 @@
 				{
 					"name": "removeAccount",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "qwerty",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "100000000",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -375,7 +566,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account?readerId=1",
+							"raw": "http://localhost:3050/account?userId=444444444",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -386,8 +577,8 @@
 							],
 							"query": [
 								{
-									"key": "readerId",
-									"value": "1"
+									"key": "userId",
+									"value": "444444444"
 								}
 							]
 						}
@@ -397,11 +588,26 @@
 				{
 					"name": "changePassword",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "qwerty",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"qwerty2\"\r\n}",
+							"raw": "{\r\n    \"oldPassword\": \"qwerty\",\r\n    \"newPassword\": \"111111111\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -409,7 +615,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/password?readerId=1",
+							"raw": "http://localhost:3050/account/password",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -418,12 +624,6 @@
 							"path": [
 								"account",
 								"password"
-							],
-							"query": [
-								{
-									"key": "readerId",
-									"value": "1"
-								}
 							]
 						}
 					},
@@ -432,11 +632,26 @@
 				{
 					"name": "updateAccount",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "111111111",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"Pascal\",\r\n    \"email\": \"newemail@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"roles\": [\"librarian\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -444,7 +659,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/update?readerId=1",
+							"raw": "http://localhost:3050/account/update?userId=444444444",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -456,8 +671,8 @@
 							],
 							"query": [
 								{
-									"key": "readerId",
-									"value": "1"
+									"key": "userId",
+									"value": "444444444"
 								}
 							]
 						}
@@ -469,6 +684,21 @@
 		{
 			"name": "404",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "111111111",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "111111111",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
