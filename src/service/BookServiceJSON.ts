@@ -1,5 +1,5 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookStatus} from "../model/book.js";
 import {booksDatabase} from "../app.js";
 import {JsonDB} from "node-json-db";
 import {HttpError} from "../errorHandler/HttpError.js";
@@ -17,27 +17,15 @@ export class BookServiceJSON implements BookService{
         return Promise.resolve();
     }
 
-    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
+    async getAllBooks(): Promise<Book[]> {
         const jsonDB = booksDatabase as JsonDB;
         const books: Book[] = await jsonDB.getData('/books').catch(err => {
             throw new Error('database error: ' + err.message + '@getAllBooks');
         });
-        if(excess)
-            return Promise.resolve(books);
-        else {
-            const booksLite: BookLite[] = [];
-            books.forEach(book => {
-                booksLite.push({title: book.title,
-                    author: book.author,
-                    genre: book.genre,
-                    year: book.year,
-                    status: book.status,});
-            })
-            return booksLite;
-        }
+        return Promise.resolve(books);
     }
 
-    async getBooks(path: string, property: string, value: string, excess: boolean): Promise<Book[] | BookLite[]> {
+    async getBooks(path: string, property: string, value: string): Promise<Book[]> {
         try {
             const jsonDB = booksDatabase as JsonDB;
             const books: Book[] = [];
@@ -48,32 +36,20 @@ export class BookServiceJSON implements BookService{
                     books.push(book);
                 }
             }
-            if(excess)
-                return Promise.resolve(books);
-            else {
-                const booksLite: BookLite[] = [];
-                books.forEach(book => {
-                    booksLite.push({title: book.title,
-                        author: book.author,
-                        genre: book.genre,
-                        year: book.year,
-                        status: book.status,});
-                })
-                return booksLite;
-            }
+            return Promise.resolve(books);
         } catch (err) {
             throw new Error('database error');
         }
     }
 
-    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBooks('/books', 'author', author, excess).catch(err => {
+    async getBooksByAuthor(author: string): Promise<Book[]> {
+        return await this.getBooks('/books', 'author', author).catch(err => {
             throw new Error(err.message + '@getBooksByAuthor');
         });
     }
 
-    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBooks('/books', 'genre', genre, excess).catch(err => {
+    async getBooksByGenre(genre: string): Promise<Book[]> {
+        return await this.getBooks('/books', 'genre', genre).catch(err => {
             throw new Error(err.message + '@getBooksByGenre');
         });
     }
@@ -84,7 +60,7 @@ export class BookServiceJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@pickBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@pickBook');
             const status = await jsonDB.getData(`/books[${index}]/status`);
             if (status === BookStatus.ON_HAND)
                 throw new HttpError(409, `book with id ${bookId} is already on hand and can't be picked`, '@pickBook');
@@ -111,7 +87,7 @@ export class BookServiceJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(409, `book with id ${bookId} is not found`,'@returnBook')
+                throw new HttpError(404, `book with id ${bookId} is not found`,'@returnBook')
             const status = await jsonDB.getData(`/books[${index}]/status`);
             if (status === BookStatus.IN_STOCK)
                 throw new HttpError(409, `book with id ${bookId} is already in stock and can't be returned`,'@returnBook');
@@ -134,7 +110,7 @@ export class BookServiceJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', data._id, '_id');
             if (index === -1)
-                throw new HttpError(409, `book with id ${data._id} is not found`, '@editBook');
+                throw new HttpError(404, `book with id ${data._id} is not found`, '@editBook');
             const status = await jsonDB.getData(`/books[${index}]/status`);
             if (status === BookStatus.REMOVED)
                 throw new HttpError(409, `book with id ${data._id} is removed and can't be edited`, '@editBook');
@@ -158,7 +134,7 @@ export class BookServiceJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@removeBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@removeBook');
             const status = await jsonDB.getData(`/books[${index}]/status`);
             if (status === BookStatus.ON_HAND)
                 throw new HttpError(409, `book with id ${bookId} is already on hand and can't be removed`, '@removeBook');
@@ -184,7 +160,7 @@ export class BookServiceJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@restoreBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@restoreBook');
             const status = await jsonDB.getData(`/books[${index}]/status`);
             if (status !== BookStatus.REMOVED)
                 throw new HttpError(409, `book with id ${bookId} is not removed and can't be removed`, '@restoreBook');

@@ -11,41 +11,28 @@ import {Role} from "../utils/libTypes.js";
 class BookServiceImpMongo implements BookService {
     private service: AccountService = accountServiceMongo;
 
-    async getBooks(options: Object, excess: boolean): Promise<Book[] | BookLite[]>{
+    async getBooks(options: Object): Promise<Book[]>{
         const model = booksDatabase as mongoose.Model<Book>
-        const books = await model.find(options)
+        return await model.find(options)
             .catch((err) => {
                 throw new Error('database error: ' + err.message);
-            });
-        if(excess)
-            return books
-        else{
-            const booksLite: BookLite[] = [];
-            books.forEach(book => {
-                booksLite.push({title: book.title,
-                    author: book.author,
-                    genre: book.genre,
-                    year: book.year,
-                    status: book.status,});
             })
-            return booksLite;
-        }
     }
 
-    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBooks({}, excess).then(data => data).catch(err => {
+    async getAllBooks(): Promise<Book[]> {
+        return await this.getBooks({}).then(data => data).catch(err => {
             throw new Error(err.message + '@getAllBooks');
         });
     }
 
-    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBooks({author: author}, excess).then(data => data).catch(err => {
+    async getBooksByAuthor(author: string): Promise<Book[]> {
+        return await this.getBooks({author: author}).then(data => data).catch(err => {
             throw new Error(err.message + '@getBooksByAuthor');
         });
     }
 
-    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBooks({genre:genre}, excess).then(data => data).catch(err => {
+    async getBooksByGenre(genre: string): Promise<Book[]> {
+        return await this.getBooks({genre:genre}).then(data => data).catch(err => {
             throw new Error(err.message + '@getBooksByGenre');
         });
     }
@@ -65,7 +52,7 @@ class BookServiceImpMongo implements BookService {
                 throw new Error('database error: ' + err.message + source)
             });
         if(!bookDoc)
-            throw new HttpError(409, `book with id ${bookId} is not found`, source)
+            throw new HttpError(404, `book with id ${bookId} is not found`, source)
         return bookDoc;
     }
 

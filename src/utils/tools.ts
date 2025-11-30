@@ -1,4 +1,4 @@
-import {Book, BookDto, BookGenres, BookStatus} from "../model/book.js";
+import {Book, BookDto, BookGenres, BookLite, BookStatus} from "../model/book.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import {v4 as uuidv4} from 'uuid';
 import {User, UserDto} from "../model/user.js";
@@ -35,4 +35,18 @@ export const convertUserDTOToUser = (readerDto: UserDto) => {
         roles: [Role.READER],
     }
     return reader;
+}
+
+export const convertBooksToBooksLite = (books: Book[]): BookLite[] => {
+    const booksLite: BookLite[] = [];
+    books.forEach(book => {
+        booksLite.push({
+            author: book.author,
+            genre: book.genre,
+            status: BookStatus.IN_STOCK,
+            title: book.title,
+            year: book.year,
+        });
+    })
+    return booksLite
 }

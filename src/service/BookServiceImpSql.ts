@@ -33,7 +33,7 @@ export class BookServiceImpSql implements BookService {
         }));
     }
 
-    async getBook(query: string, source: string, excess: boolean) {
+    async getBook(query: string, source: string) {
         const pool = booksDatabase as Pool;
         const books = await pool.query<RowDataPacket[]>(query).then(async data => {
             const [result] = data;
@@ -47,30 +47,19 @@ export class BookServiceImpSql implements BookService {
             throw new Error(err.message + source);
         })
         const result = await Promise.all(books) as Book[];
-        if(excess) return Promise.resolve(result);
-        else {
-            const booksLite: BookLite[] = [];
-            result.forEach(book => {
-                booksLite.push({title: book.title,
-                    author: book.author,
-                    genre: book.genre,
-                    year: book.year,
-                    status: book.status,});
-            })
-            return Promise.resolve(booksLite);
-        }
+        return Promise.resolve(result);
     }
 
-    async getAllBooks(excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBook('SELECT * FROM books', '@getAllBooks', excess);
+    async getAllBooks(): Promise<Book[]> {
+        return await this.getBook('SELECT * FROM books', '@getAllBooks');
     }
 
-    async getBooksByGenre(genre: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBook(`SELECT * FROM books WHERE genre = '${genre}'`, '@getBooksByGenre', excess);
+    async getBooksByGenre(genre: string): Promise<Book[]> {
+        return await this.getBook(`SELECT * FROM books WHERE genre = '${genre}'`, '@getBooksByGenre');
     }
 
-    async getBooksByAuthor(author: string, excess: boolean): Promise<Book[] | BookLite[]> {
-        return await this.getBook(`SELECT * FROM books WHERE author = '${author}'`, '@getBooksByAuthor', excess);
+    async getBooksByAuthor(author: string): Promise<Book[]> {
+        return await this.getBook(`SELECT * FROM books WHERE author = '${author}'`, '@getBooksByAuthor');
     }
 
     async removeBook(bookId: string): Promise<Book> {
@@ -97,7 +86,7 @@ export class BookServiceImpSql implements BookService {
                             throw new Error('database connection error@removeBook')
                         })
             } else
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@removeBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@removeBook');
             return Promise.resolve(result[0] as Book);
         })
         const pickList = await this.formPickList(bookId)
@@ -126,7 +115,7 @@ export class BookServiceImpSql implements BookService {
                         throw new Error('database connection error@editBook')
                     });
             } else
-                throw new HttpError(409, `book with id ${editData._id} is not found`, '@editBook');
+                throw new HttpError(404, `book with id ${editData._id} is not found`, '@editBook');
             return Promise.resolve(result[0] as Book);
         })
         const pickList = await this.formPickList(editData._id)
@@ -149,7 +138,7 @@ export class BookServiceImpSql implements BookService {
                         throw new Error('database connection error@restoreBook');
                     });
             } else
-                throw new HttpError(409, `book with id ${bookId} is not found`,  '@restoreBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`,  '@restoreBook');
             return Promise.resolve(result[0] as Book);
         });
         const pickList = await this.formPickList(bookId)
@@ -182,7 +171,7 @@ export class BookServiceImpSql implements BookService {
                         throw new Error('database connection error@pickBook')
                     });
             } else
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@pickBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@pickBook');
         });
     }
 
@@ -205,7 +194,7 @@ export class BookServiceImpSql implements BookService {
                         throw new Error('database connection error@returnBook');
                     });
             } else
-                throw new HttpError(409, `book with id ${bookId} is not found`, '@returnBook');
+                throw new HttpError(404, `book with id ${bookId} is not found`, '@returnBook');
         });
     }
 }
