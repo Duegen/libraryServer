@@ -12,7 +12,6 @@ export type UpdateUserDTO ={
     userName?: string;
     email?: string;
     birthDate?: string;
-    roles?: Role[];
 }
 
 export type User = {

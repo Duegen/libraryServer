@@ -20,6 +20,9 @@ export const accountEditDTOSchema = Joi.object({
     userName: Joi.string().optional(),
     email: Joi.string().email().optional(),
     birthDate: Joi.date().format('DD.MM.YYYY').max('now').optional(),
+})
+
+export const accountRolesSchema = Joi.object({
     roles: Joi.array().items(Joi.string().valid(...Object.values(Role)))
 })
 

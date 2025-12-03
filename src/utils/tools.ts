@@ -50,3 +50,17 @@ export const convertBooksToBooksLite = (books: Book[]): BookLite[] => {
     })
     return booksLite
 }
+
+export const excessLevels = (roles: Role[])=> {
+    const excess: number[] = [];
+    roles.forEach(role => {
+        switch (role) {
+            case Role.READER:{excess.push(1);break;}
+            case Role.LIBRARIAN:{excess.push(2);break;}
+            case Role.ADMIN:{excess.push(3);break;}
+            case Role.SUPERVISOR:{excess.push(4);break;}
+            default: excess.push(0);
+        }
+    })
+    return excess;
+}

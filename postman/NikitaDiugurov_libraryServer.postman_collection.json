@@ -18,12 +18,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -476,12 +476,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "111111111",
+									"value": "qwerty",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "111111111",
+									"value": "100000000",
 									"type": "string"
 								}
 							]
@@ -493,7 +493,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/byId?userId=333333333",
+							"raw": "http://localhost:3050/account/byId?userId=111111111",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -506,7 +506,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "333333333"
+									"value": "111111111"
 								}
 							]
 						}
@@ -549,12 +549,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "qwerty",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "100000000",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -566,7 +566,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account?userId=444444444",
+							"raw": "http://localhost:3050/account?userId=333333333",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -578,7 +578,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "444444444"
+									"value": "333333333"
 								}
 							]
 						}
@@ -593,7 +593,7 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "qwerty",
+									"value": "222222222",
 									"type": "string"
 								},
 								{
@@ -607,7 +607,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"oldPassword\": \"qwerty\",\r\n    \"newPassword\": \"111111111\"\r\n}",
+							"raw": "{\r\n    \"oldPassword\": \"222222222\",\r\n    \"newPassword\": \"111111111\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -651,7 +651,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roles\": [\"librarian\"]\r\n}",
+							"raw": "{\r\n    \"userName\": \"Shmul\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -659,7 +659,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/update?userId=444444444",
+							"raw": "http://localhost:3050/account/update?userId=100000000",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -672,7 +672,57 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "444444444"
+									"value": "100000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setAccountRoles",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "111111111",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "111111111",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roles\": [\"librarian\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3050/account/roles?userId=222222222",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3050",
+							"path": [
+								"account",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "222222222"
 								}
 							]
 						}

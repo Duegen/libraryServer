@@ -4,8 +4,17 @@ import {accountDatabase} from "../app.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import {Role} from "../utils/libTypes.js";
 
 class AccountServiceImpMongo implements AccountService {
+    async setAccountRole(userId: number, roles: Role[]): Promise<User>{
+        const userDoc = await this.getAccount(userId, '@setRoles');
+        userDoc.roles = roles;
+        await userDoc.save().catch(err => {
+            throw new Error('database error: ' + err.message + '@setRoles');
+        });
+        return userDoc;
+    }
 
     async changePassword(userId: number, oldPassword: string, newPassword: string): Promise<void> {
         const userDoc = await this.getAccount(userId, '@changePassword');
@@ -30,7 +39,6 @@ class AccountServiceImpMongo implements AccountService {
         userDoc.userName = newUserData.userName || userDoc.userName;
         userDoc.email = newUserData.email || userDoc.email;
         userDoc.birthDate = newUserData.birthDate || userDoc.birthDate;
-        userDoc.roles = newUserData.roles || userDoc.roles;
         await userDoc.save().catch(err => {
             throw new Error('database error: ' + err.message + '@updateAccount');
         });

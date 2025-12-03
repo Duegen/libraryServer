@@ -7,10 +7,11 @@ export const skipRoutesArr = [
 ]
 
 export const pathRoles: {[index: string]: string[]} = {
-    'GET/account/byId': [Role.ADMIN, Role.SUPERVISOR],
+    'GET/account/byId': [Role.ADMIN, Role.SUPERVISOR, Role.READER, Role.LIBRARIAN],
     'PATCH/account/password': [Role.READER, Role.ADMIN, Role.LIBRARIAN, Role.SUPERVISOR],
     'DELETE/account': [Role.ADMIN, Role.SUPERVISOR],
-    'PATCH/account/update' : [Role.ADMIN, Role.SUPERVISOR],
+    'PATCH/account/update' : [Role.ADMIN, Role.SUPERVISOR,  Role.READER, Role.LIBRARIAN],
+    'PATCH/account/roles': [Role.ADMIN, Role.SUPERVISOR],
     'GET/api/books': [Role.READER, Role.LIBRARIAN],
     'GET/api/books/genres/': [Role.READER, Role.LIBRARIAN],
     'GET/api/books/authors/': [Role.READER, Role.LIBRARIAN],
