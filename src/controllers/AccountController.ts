@@ -12,9 +12,8 @@ class AccountController {
     setRoles = async (req: AuthRequest, res: Response) => {
         const newRoles: Role[] =  req.body.roles;
         const userId = +req.query.userId!;
-        const user = await this.service.getAccountById(userId);
-        if (Math.max(...excessLevels(req.roles!)) <= Math.max(...excessLevels(newRoles)))
-            throw new HttpError(401, 'unauthorized', '@setRoles');
+        if((newRoles.includes(Role.ADMIN) || newRoles.includes(Role.SUPERVISOR)) && !req.roles?.includes(Role.SUPERVISOR))
+            throw new HttpError(403, '', '@setRoles');
         const userResult = await this.service.setAccountRole(userId, newRoles);
         res.status(200).json(userResult);
         loggerWinston.info(`userId: ${req.userId}@roles of account with id ${userResult._id} are updated@setRoles`)
@@ -34,7 +33,7 @@ class AccountController {
         const user = await this.service.getAccountById(userId);
         if (req.userId !== userId) {
             if (Math.max(...excessLevels(req.roles!)) < Math.max(...excessLevels(user.roles!)) || Math.max(...excessLevels(req.roles!)) === 1)
-                throw new HttpError(401, 'unauthorized', '@getAccountById');
+                throw new HttpError(403, '', '@getAccountById');
         }
         const userResult = await this.service.getAccount(userId, '@getAccountById');
         res.json(userResult);
@@ -45,8 +44,8 @@ class AccountController {
         const userId = +req.query.userId!;
         if (!userId) throw new HttpError(400, 'no params', '@removeAccount');
         const user = await this.service.getAccountById(userId);
-        if (Math.max(...excessLevels(req.roles!)) <= Math.max(...excessLevels(user.roles!)))
-            throw new HttpError(401, 'unauthorized', '@getAccountById');
+        if(user.roles.includes(Role.ADMIN) && !req.roles?.includes(Role.SUPERVISOR))
+            throw new HttpError(403, '', '@removeAccount');
         const userRemove = await this.service.removeAccount(userId);
         res.json(userRemove);
         loggerWinston.info(`userId: ${req.userId}@account with id ${userRemove._id} is removed@removeAccount`)
@@ -67,8 +66,9 @@ class AccountController {
         const newUserData = req.body as UpdateUserDTO;
         const user = await this.service.getAccountById(userId);
         if (req.userId !== userId) {
-            if (Math.max(...excessLevels(req.roles!)) <= Math.max(...excessLevels(user.roles!)) || Math.max(...excessLevels(req.roles!)) < 3)
-                throw new HttpError(401, 'unauthorized', '@editAccount');
+            if (Math.max(...excessLevels(req.roles!)) < 3
+                || (req.roles?.includes(Role.ADMIN) && user.roles.includes(Role.ADMIN)))
+                throw new HttpError(403, '', '@editAccount');
         }
         const userResult = await this.service.editAccount(userId, newUserData);
         res.json(userResult);

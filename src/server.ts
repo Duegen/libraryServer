@@ -6,6 +6,7 @@ import {pathRoles, PORT, skipRoutesArr} from "./configuration/appConfig.js";
 import {accountRouter} from "./routers/accountRouter.js";
 import {authenticate, skipRoutes} from "./middleware/authentication.js";
 import {accountServiceMongo} from "./service/AccountServiceImpMongo.js";
+import {authorize} from "./middleware/authorization.js";
 
 export const launchServer = async () => {
     const app = express();
@@ -17,7 +18,8 @@ export const launchServer = async () => {
 
     //============middleware========
     app.use(authenticate(accountServiceMongo));
-    app.use(skipRoutes(skipRoutesArr, pathRoles))
+    app.use(skipRoutes(skipRoutesArr))
+    app.use(authorize(pathRoles))
     app.use(express.json())
     //============routers=====
     app.use('/api', apiRouter)

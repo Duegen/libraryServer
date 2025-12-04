@@ -6,7 +6,7 @@ export const skipRoutesArr = [
     "POST/account"
 ]
 
-export const pathRoles: {[index: string]: string[]} = {
+export const pathRoles = {
     'GET/account/byId': [Role.ADMIN, Role.SUPERVISOR, Role.READER, Role.LIBRARIAN],
     'PATCH/account/password': [Role.READER, Role.ADMIN, Role.LIBRARIAN, Role.SUPERVISOR],
     'DELETE/account': [Role.ADMIN, Role.SUPERVISOR],
