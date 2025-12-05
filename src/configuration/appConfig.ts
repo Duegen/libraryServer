@@ -13,6 +13,8 @@ export type AppConfig = {
     get_books_info_level: number,
     pick_book_access: string[],
     edit_account_access: string[],
+    default_rate_limit: number,
+    anonymous_rate_limit: number,
 }
 
 export const config: AppConfig = {...confJson};

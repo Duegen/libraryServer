@@ -14,9 +14,11 @@
     "librarian": 2
   },
   "status_roles": {
-    "user": 2,
+    "user": 5,
     "premium_user": -1
   },
+  "default_rate_limit": 5,
+  "anonymous_rate_limit": 1,
   "get_books_info_level": 2,
   "pick_book_access": ["reader"],
   "edit_account_access": ["admin", "supervisor"],

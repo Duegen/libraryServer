@@ -7,6 +7,8 @@ import {accountRouter} from "./routers/accountRouter.js";
 import {authenticate, skipRoutes} from "./middleware/authentication.js";
 import {accountServiceMongo} from "./service/AccountServiceImpMongo.js";
 import {authorize} from "./middleware/authorization.js";
+import {loggedInLimit, unloggedInLimit} from "./middleware/rateLimit.js";
+import {AuthRequest} from "./utils/libTypes.js";
 
 export const launchServer = async () => {
     const app = express();
@@ -18,7 +20,11 @@ export const launchServer = async () => {
 
     //============middleware========
     app.use(authenticate(accountServiceMongo));
-    app.use(skipRoutes(config.skipRoutesArr))
+    app.use((req: AuthRequest, res, next) => {
+        if(req.userId) loggedInLimit(req, res, next)
+        else unloggedInLimit(req, res, next)
+    })
+    app.use(skipRoutes(config.skipRoutesArr));
     app.use(authorize(config.pathRoles as Record<string, string[]>))
     app.use(express.json())
     //============routers===========
