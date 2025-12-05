@@ -3,8 +3,8 @@ import {HttpError} from "../errorHandler/HttpError.js";
 import {v4 as uuidv4} from 'uuid';
 import {User, UserDto} from "../model/user.js";
 import bcrypt from 'bcryptjs';
-import {Role} from "./libTypes.js";
 import jwt from 'jsonwebtoken';
+import {config} from "../configuration/appConfig.js";
 
 export function getGenre(genre: string){
     const gen = Object.values(BookGenres).find(value => value === genre)
@@ -33,7 +33,7 @@ export const convertUserDTOToUser = (readerDto: UserDto) => {
         email: readerDto.email,
         passHash: passHash,
         userName: readerDto.userName,
-        roles: [Role.READER],
+        roles: config.default_roles,
     }
     return reader;
 }
@@ -52,21 +52,7 @@ export const convertBooksToBooksLite = (books: Book[]): BookLite[] => {
     return booksLite
 }
 
-export const excessLevels = (roles: Role[])=> {
-    const excess: number[] = [];
-    roles.forEach(role => {
-        switch (role) {
-            case Role.READER:{excess.push(1);break;}
-            case Role.LIBRARIAN:{excess.push(2);break;}
-            case Role.ADMIN:{excess.push(3);break;}
-            case Role.SUPERVISOR:{excess.push(4);break;}
-            default: excess.push(0);
-        }
-    })
-    return excess;
-}
-
-export const getJWT = (userId: number, roles: Role[]) => {
+export const getJWT = (userId: number, roles: string[]) => {
     const payload = {roles: JSON.stringify(roles)};
     const secret = process.env.JWT_SECRET || '';
     const options = {
@@ -74,4 +60,12 @@ export const getJWT = (userId: number, roles: Role[]) => {
         subject: userId.toString(),
     }
     return jwt.sign(payload, secret, options);
+}
+
+export const getAccessLevel = (roles: string[]) => {
+    let accessLevel = 0;
+    roles.forEach(role => {
+        if(config.access_roles[role] > accessLevel) accessLevel = config.access_roles[role];
+    })
+    return accessLevel;
 }

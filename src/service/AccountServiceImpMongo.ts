@@ -4,7 +4,6 @@ import {accountDatabase} from "../app.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import {Role} from "../utils/libTypes.js";
 import {getJWT} from "../utils/tools.js";
 
 export class AccountServiceImpMongo implements AccountService {
@@ -16,7 +15,7 @@ export class AccountServiceImpMongo implements AccountService {
         return getJWT(userId, user.roles);
     }
 
-    async setAccountRole(userId: number, roles: Role[]): Promise<User>{
+    async setAccountRole(userId: number, roles: string[]): Promise<User>{
         const userDoc = await this.getAccount(userId, '@setRoles');
         userDoc.roles = roles;
         await userDoc.save().catch(err => {
@@ -37,7 +36,7 @@ export class AccountServiceImpMongo implements AccountService {
 
     async createAccount(user: User): Promise<void> {
         await accountDatabase.create({...user, _id: user._id}).catch(err => {
-            if(err.code === 11000) throw new HttpError(409, 'duplicate readerId, account not created','@createAccount')
+            if(err.code === 11000) throw new HttpError(409, 'duplicated userId, account not created','@createAccount')
             else throw new Error('database error: ' + err.message + '@createAccount')
         })
         return Promise.resolve();

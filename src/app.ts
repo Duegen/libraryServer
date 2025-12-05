@@ -13,38 +13,30 @@ const accountPromise = mongoConnect(process.env.MONGO_CLUSTER || '',
         return data;
     })
     .catch(() => {
-        loggerWinston.warn('Accounts database<MongoDB>: connection to database is failed');
+        loggerWinston.warn('accounts database connection failed');
         throw new Error('accounts database connection failed');
-        //   process.exit(1)
     })
 
 const booksPromise = booksDatabaseConnect().then(data => {
-    loggerWinston.warn(`Books database${bookDb}: database is successfully connected`);
+    loggerWinston.warn(`books database${bookDb}: database is successfully connected`);
     return data;
-}).catch((err) => {
-    loggerWinston.warn("Books database: connection to database is failed");
+}).catch(() => {
+    loggerWinston.warn("books database connection failed");
     throw new Error('books database connection failed');
-    //process.exit(1)
 });
 
 export let accountDatabase: mongoose.Model<any>;
 export let booksDatabase: mongoose.Model<any> | Pool | JsonDB;
 
 Promise.all([accountPromise, booksPromise]).then(([accountDtbs, bookDtbs]) => {
-    accountDatabase =  accountDtbs;
-    booksDatabase =  bookDtbs;
-    launchServer()
-        .then(() => {
-            loggerWinston.warn("server is successfully started");
-        }).catch((err) => {
+    accountDatabase = accountDtbs;
+    booksDatabase = bookDtbs;
+    launchServer().catch((err) => {
         loggerWinston.warn("starting server is failed: " + err.message);
     })
-}).catch((err) => {
+}).catch(() => {
     process.exit(1)
 })
-
-
-
 
 // export const accountDatabase: mongoose.Model<any> = await mongoConnect(process.env.MONGO_CLUSTER || '',
 //     process.env.MONGO_DATABASE || '', process.env.ACCOUNTS_MONGO_COLLECTION || '', accountMongoSchema)

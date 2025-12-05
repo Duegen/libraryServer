@@ -1,6 +1,6 @@
 import BaseJoi, { Extension, Root } from 'joi'
 import JoiDate from '@joi/date'
-import {Role} from "../utils/libTypes.js";
+import {rolesList} from "../configuration/appConfig.js";
 
 const Joi = BaseJoi.extend(JoiDate as unknown as Extension) as Root
 
@@ -23,7 +23,7 @@ export const accountEditDTOSchema = Joi.object({
 })
 
 export const accountRolesSchema = Joi.object({
-    roles: Joi.array().items(Joi.string().valid(Role.ADMIN, Role.READER, Role.LIBRARIAN))
+    roles: Joi.array().items(Joi.string().valid(...rolesList))
 })
 
 export const accountNewPasswordSchema = Joi.object({

@@ -8,6 +8,6 @@ export interface BookService{
     editBook: (data: BookEdit) => Promise<Book>;
     removeBook: (bookId: string) => Promise<Book>;
     restoreBook: (bookId: string) => Promise<Book>;
-    pickBook: (bookId: string, readerId:number) => Promise<void>;
+    pickBook: (bookId: string, readerId:number, readerName: string) => Promise<void>;
     returnBook: (bookId: string) => Promise<void>;
 }

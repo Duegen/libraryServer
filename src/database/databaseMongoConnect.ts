@@ -2,7 +2,7 @@ import {model, Schema} from "mongoose";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import {v4 as uuidv4} from 'uuid';
-import {Role} from "../utils/libTypes.js";
+import {config} from "../configuration/appConfig.js";
 
 const pickListSchema = new mongoose.Schema({
     readerId: {type: Number, min: 100000000, max: 999999999, required: true},
@@ -14,7 +14,7 @@ const pickListSchema = new mongoose.Schema({
 });
 
 export const bookMongoShema = new Schema({
-    _id: {type: String, default: () => uuidv4(), unique: true},
+    _id: {type: String, default: () => uuidv4()},
     title: {type: String, required: true},
     author: {type: String, required: true},
     genre: {type: String, required: true},
@@ -27,12 +27,12 @@ export const bookMongoShema = new Schema({
 })
 
 export const accountMongoSchema = new Schema({
-    _id: {type: Number, min: 100000000, max: 999999999, unique: true},
+    _id: {type: Number, min: 100000000, max: 999999999},
     userName: {type: String, required: true},
     email: {type: String, required: true},
     passHash: {type: String, required: true},
     birthDate: {type: String, required: true},
-    roles: {type: [String], default: [Role.READER]},
+    roles: {type: [String], default: config.default_roles},
 },{
     versionKey: false,
 })

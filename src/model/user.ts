@@ -1,5 +1,3 @@
-import {Role} from "../utils/libTypes.js";
-
 export type UserDto = {
     userId: number;
     userName: string;
@@ -20,5 +18,5 @@ export type User = {
     email: string;
     passHash: string;
     birthDate: string;
-    roles: Role[];
+    roles: string[];
 }

@@ -1,5 +1,5 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookStatus} from "../model/book.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 import {RowDataPacket} from "mysql2";
 import {booksDatabase} from "../app.js";

@@ -1,47 +1,49 @@
 {
   "port": 3050,
+  "database_mode": "MONGO",
   "skipRoutesArr": [
     "POST/account",
     "POST/account/login"
   ],
+  "default_roles": ["reader", "user"],
+  "supervisor_roles": ["supervisor", "premium_user"],
+  "supervisor_access": 99,
+  "access_roles": {
+    "admin": 3,
+    "reader": 1,
+    "librarian": 2
+  },
+  "status_roles": {
+    "user": 2,
+    "premium_user": -1
+  },
+  "get_books_info_level": 2,
+  "pick_book_access": ["reader"],
+  "edit_account_access": ["admin", "supervisor"],
   "pathRoles": {
     "GET/account/byId": [
-      "admin",
-      "supervisor",
-      "reader",
-      "librarian"
+      "admin", "supervisor", "reader", "librarian"
     ],
     "PATCH/account/password": [
-      "reader",
-      "admin",
-      "librarian",
-      "supervisor"
+      "reader", "admin", "librarian", "supervisor"
     ],
     "DELETE/account": [
-      "admin",
-      "supervisor"
+      "admin", "supervisor"
     ],
     "PATCH/account/update": [
-      "admin",
-      "supervisor",
-      "reader",
-      "librarian"
+      "admin", "supervisor", "reader", "librarian"
     ],
     "PATCH/account/roles": [
-      "admin",
-      "supervisor"
+      "admin", "supervisor"
     ],
     "GET/api/books": [
-      "reader",
-      "librarian"
+      "reader", "librarian"
     ],
     "GET/api/books/genres/": [
-      "reader",
-      "librarian"
+      "reader", "librarian"
     ],
     "GET/api/books/authors/": [
-      "reader",
-      "librarian"
+      "reader", "librarian"
     ],
     "POST/api/books": [
       "librarian"
@@ -62,12 +64,10 @@
       "librarian"
     ],
     "GET/api/logger": [
-      "admin",
-      "supervisor"
+      "admin", "supervisor"
     ],
     "GET/api/logger/dates": [
-      "admin",
-      "supervisor"
+      "admin", "supervisor"
     ]
   }
 }

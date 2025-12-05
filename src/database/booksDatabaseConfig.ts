@@ -5,6 +5,7 @@ import {bookServiceSql} from "../service/BookServiceImpSql.js";
 import {bookServiceMongo} from "../service/BookServiceImpMongo.js";
 import {JSONConnect} from "./booksDatabaseJSONConnect.js";
 import {bookServiceJSON} from "../service/BookServiceJSON.js";
+import {config} from "../configuration/appConfig.js";
 
 dotenv.config({quiet: true});
 
@@ -17,7 +18,7 @@ let db;
 //MONGO - mongo database
 //NODE_JSON - Node JSON database
 
-switch (process.env.DATABASE_MODE){
+switch (config.database_mode){
     case 'SQL':{
         connectFunc = sqlConnect;
         service = bookServiceSql;

@@ -6,7 +6,6 @@ import {v4 as uuidv4} from 'uuid';
 import {HttpError} from "../errorHandler/HttpError.js";
 import {AccountService} from "./iAccountService.js";
 import {accountServiceMongo} from "./AccountServiceImpMongo.js";
-import {Role} from "../utils/libTypes.js";
 
 class BookServiceImpMongo implements BookService {
     private service: AccountService = accountServiceMongo;
@@ -99,19 +98,16 @@ class BookServiceImpMongo implements BookService {
         return Promise.resolve(bookDoc as Book);
     }
 
-    async pickBook(bookId: string, readerId: number): Promise<void> {
-        const account = await this.service.getAccountById(readerId);
+    async pickBook(bookId: string, readerId: number, readerName: string): Promise<void> {
         const bookDoc = await this.getBookById(bookId, '@pickBook');
         if (bookDoc.status === BookStatus.REMOVED)
             throw new HttpError(409, `book with id ${bookId} is removed and can't be picked`,`@pickBook`);
         if (bookDoc.status === BookStatus.ON_HAND)
             throw new HttpError(409, `book with id ${bookId} is already on hand`,`@pickBook`)
-        if(!account.roles.includes(Role.READER))
-            throw new HttpError(409, `user is not reader`,`@pickBook`)
         bookDoc.status = BookStatus.ON_HAND;
         bookDoc.pickList.push({
-            readerId: account._id,
-            readerName: account.userName,
+            readerId: readerId,
+            readerName: readerName,
             pickDate: new Date().toLocaleDateString(),
             returnDate: null
         })
