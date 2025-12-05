@@ -2,24 +2,26 @@ import express from 'express';
 import {errorHandler} from "./errorHandler/errorHandler.js";
 import {loggerWinston} from "./winston/logger.js";
 import {apiRouter} from "./routers/apiRouter.js";
-import {pathRoles, PORT, skipRoutesArr} from "./configuration/appConfig.js";
+import {config} from "./configuration/appConfig.js";
 import {accountRouter} from "./routers/accountRouter.js";
 import {authenticate, skipRoutes} from "./middleware/authentication.js";
 import {accountServiceMongo} from "./service/AccountServiceImpMongo.js";
 import {authorize} from "./middleware/authorization.js";
+import {Role} from "./utils/libTypes.js";
+
 
 export const launchServer = async () => {
     const app = express();
 
-    const server = app.listen(PORT, () => {
-        console.log(`Server runs at http://localhost:${PORT}`)
+    const server = app.listen(config.port, () => {
+        console.log(`Server runs at http://localhost:${config.port}`)
         loggerWinston.warn("server successfully started");
     });
 
     //============middleware========
     app.use(authenticate(accountServiceMongo));
-    app.use(skipRoutes(skipRoutesArr))
-    app.use(authorize(pathRoles))
+    app.use(skipRoutes(config.skipRoutesArr))
+    app.use(authorize(config.pathRoles as Record<string, Role[]>))
     app.use(express.json())
     //============routers=====
     app.use('/api', apiRouter)

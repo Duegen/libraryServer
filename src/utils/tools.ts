@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import {User, UserDto} from "../model/user.js";
 import bcrypt from 'bcryptjs';
 import {Role} from "./libTypes.js";
+import jwt from 'jsonwebtoken';
 
 export function getGenre(genre: string){
     const gen = Object.values(BookGenres).find(value => value === genre)
@@ -63,4 +64,14 @@ export const excessLevels = (roles: Role[])=> {
         }
     })
     return excess;
+}
+
+export const getJWT = (userId: number, roles: Role[]) => {
+    const payload = {roles: JSON.stringify(roles)};
+    const secret = process.env.JWT_SECRET || '';
+    const options = {
+        expiresIn: process.env.JWT_EXP as any || '1h',
+        subject: userId.toString(),
+    }
+    return jwt.sign(payload, secret, options);
 }

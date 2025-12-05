@@ -6,7 +6,7 @@ import {
     accountIdSchema,
     accountEditDTOSchema,
     accountNewPasswordSchema,
-    accountRolesSchema
+    accountRolesSchema, loginShema
 } from "../joi/accountsJoiSchema.js";
 import {validationBody, validationQuery} from "../middleware/validation.js";
 
@@ -20,3 +20,4 @@ accountRouter.delete('/', validationQuery(accountIdSchema), controller.removeAcc
 accountRouter.patch('/password', validationBody(accountNewPasswordSchema), controller.changePassword);
 accountRouter.patch('/update', validationQuery(accountIdSchema), validationBody(accountEditDTOSchema), controller.editAccount)
 accountRouter.patch('/roles', validationQuery(accountIdSchema), validationBody(accountRolesSchema), controller.setRoles)
+accountRouter.post('/login', validationBody(loginShema), controller.login)

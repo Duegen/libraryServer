@@ -8,7 +8,7 @@ export const accountDTOSchema = Joi.object({
     userId: Joi.number().min(100000001).max(999999999).integer().required(),
     userName: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string().min(8).alphanum().required(),
     birthDate: Joi.date().format('DD.MM.YYYY').max('now').required(),
 })
 
@@ -29,4 +29,9 @@ export const accountRolesSchema = Joi.object({
 export const accountNewPasswordSchema = Joi.object({
     oldPassword: Joi.string().required(),
     newPassword: Joi.string().required(),
+})
+
+export const loginShema = Joi.object({
+    userId: Joi.number().min(100000001).max(999999999).integer().required(),
+    password: Joi.string().min(8).alphanum().required()
 })

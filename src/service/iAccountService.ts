@@ -8,4 +8,5 @@ export interface AccountService {
     changePassword: (userId: number, oldPassword: string, newPassword: string) => Promise<void>;
     editAccount: (userId:number, newReaderData: UpdateUserDTO) => Promise<User>;
     setAccountRole: (userId: number, roles: Role[]) => Promise<User>;
+    login(userId: number, password: string): Promise<string>;
 }

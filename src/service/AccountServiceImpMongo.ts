@@ -5,8 +5,17 @@ import {HttpError} from "../errorHandler/HttpError.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import {Role} from "../utils/libTypes.js";
+import {getJWT} from "../utils/tools.js";
 
-class AccountServiceImpMongo implements AccountService {
+export class AccountServiceImpMongo implements AccountService {
+
+    async login(userId: number, password: string): Promise<string> {
+        const user = await this.getAccount(userId, '@login')
+        if(!bcrypt.compareSync(password, user.passHash))
+            throw new HttpError(401, "wrong credentials", '@login');
+        return getJWT(userId, user.roles);
+    }
+
     async setAccountRole(userId: number, roles: Role[]): Promise<User>{
         const userDoc = await this.getAccount(userId, '@setRoles');
         userDoc.roles = roles;

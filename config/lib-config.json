@@ -1,0 +1,73 @@
+{
+  "port": 3050,
+  "skipRoutesArr": [
+    "POST/account",
+    "POST/account/login"
+  ],
+  "pathRoles": {
+    "GET/account/byId": [
+      "admin",
+      "supervisor",
+      "reader",
+      "librarian"
+    ],
+    "PATCH/account/password": [
+      "reader",
+      "admin",
+      "librarian",
+      "supervisor"
+    ],
+    "DELETE/account": [
+      "admin",
+      "supervisor"
+    ],
+    "PATCH/account/update": [
+      "admin",
+      "supervisor",
+      "reader",
+      "librarian"
+    ],
+    "PATCH/account/roles": [
+      "admin",
+      "supervisor"
+    ],
+    "GET/api/books": [
+      "reader",
+      "librarian"
+    ],
+    "GET/api/books/genres/": [
+      "reader",
+      "librarian"
+    ],
+    "GET/api/books/authors/": [
+      "reader",
+      "librarian"
+    ],
+    "POST/api/books": [
+      "librarian"
+    ],
+    "DELETE/api/books": [
+      "librarian"
+    ],
+    "PATCH/api/books": [
+      "librarian"
+    ],
+    "PATCH/api/books/restore": [
+      "librarian"
+    ],
+    "PATCH/api/books/pick": [
+      "librarian"
+    ],
+    "PATCH/api/books/return": [
+      "librarian"
+    ],
+    "GET/api/logger": [
+      "admin",
+      "supervisor"
+    ],
+    "GET/api/logger/dates": [
+      "admin",
+      "supervisor"
+    ]
+  }
+}

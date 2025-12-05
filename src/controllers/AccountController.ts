@@ -75,6 +75,13 @@ class AccountController {
         loggerWinston.info(`userId: ${req.userId}@info of account with id ${userId} is updated@changePassword`)
     };
 
+    login = async (req: AuthRequest, res: Response) => {
+        const {userId, password} =  req.body;
+        const token = await this.service.login(userId,password);
+        res.send(token);
+        loggerWinston.info(`userId: ${userId}@user with id ${userId} login@login`)
+    }
+
 }
 
 export const accountController = new AccountController();

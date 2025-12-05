@@ -37,9 +37,20 @@ export const accountMongoSchema = new Schema({
     versionKey: false,
 })
 
+async function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export async function mongoConnect(mongoCluster: string, mongoDatabase: string, mongoCollection: string, mongoShema: mongoose.Schema) {
     try {
         dotenv.config({quiet: true});
+        if(mongoose.connection.readyState > 1)
+            while(1) {
+                const result = await delay(100).then(() => {
+                    return mongoose.connection.readyState <= 1;
+                })
+                if(result) break;
+            }
         if(!mongoose.connection.readyState)
             await mongoose.connect(mongoCluster + mongoDatabase)
         if(mongoose.connection.name !== mongoDatabase)

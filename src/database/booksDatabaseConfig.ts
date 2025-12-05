@@ -12,6 +12,11 @@ let connectFunc;
 let service;
 let db;
 
+//database modes:
+//SQL - sql database
+//MONGO - mongo database
+//NODE_JSON - Node JSON database
+
 switch (process.env.DATABASE_MODE){
     case 'SQL':{
         connectFunc = sqlConnect;
