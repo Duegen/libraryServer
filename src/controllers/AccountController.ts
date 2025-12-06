@@ -5,7 +5,6 @@ import {HttpError} from "../errorHandler/HttpError.js";
 import {convertUserDTOToUser, getAccessLevel} from "../utils/tools.js";
 import {loggerWinston} from "../winston/logger.js";
 import {AuthRequest} from "../utils/libTypes.js";
-import {config} from "../configuration/appConfig.js";
 
 class AccountController {
     service = accountServiceMongo;
@@ -29,11 +28,10 @@ class AccountController {
     };
 
     getAccountById = async (req: AuthRequest, res: Response) => {
-        const userId = +req.query.userId!;
-        if (!userId) throw new HttpError(400, 'no params', '@getAccountById');
-        const user = await this.service.getAccountById(userId);
+        const userId = req.query.userId ? +req.query.userId : +req.userId!;
         if (req.userId !== userId) {
-            if (req.accessLevel! <= getAccessLevel(user.roles))
+            const user = await this.service.getAccountById(userId);
+            if (req.accessLevel! < getAccessLevel(user.roles))
                 throw new HttpError(403, '', '@getAccountById');
         }
         const userResult = await this.service.getAccount(userId, '@getAccountById');
@@ -63,10 +61,11 @@ class AccountController {
     };
 
     editAccount = async (req: AuthRequest, res: Response) => {
-        const userId = +req.query.userId!;
+        const userId = req.query.userId ? +req.query.userId : +req.userId!;
         const newUserData = req.body as UpdateUserDTO;
         if (req.userId !== userId) {
-            if(!req.roles!.some(role => config.edit_account_access.includes(role)))
+            const user = await this.service.getAccountById(userId);
+            if(req.accessLevel! <= getAccessLevel(user.roles))
                 throw new HttpError(403, '', '@editAccount');
         }
         const userResult = await this.service.editAccount(userId, newUserData);

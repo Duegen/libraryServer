@@ -11,10 +11,10 @@ export type AppConfig = {
     skipRoutesArr: string[];
     pathRoles: Record<string, string[]>,
     get_books_info_level: number,
-    pick_book_access: string[],
-    edit_account_access: string[],
+    reader_roles: string[],
     default_rate_limit: number,
     anonymous_rate_limit: number,
+    selfRoutesArr: string[]
 }
 
 export const config: AppConfig = {...confJson};

@@ -5,6 +5,11 @@
     "POST/account",
     "POST/account/login"
   ],
+  "selfRoutesArr": [
+    "GET/account/byId",
+    "PATCH/account/password",
+    "PATCH/account/update"
+  ],
   "default_roles": ["reader", "user"],
   "supervisor_roles": ["supervisor", "premium_user"],
   "supervisor_access": 99,
@@ -20,20 +25,16 @@
   "default_rate_limit": 5,
   "anonymous_rate_limit": 1,
   "get_books_info_level": 2,
-  "pick_book_access": ["reader"],
-  "edit_account_access": ["admin", "supervisor"],
+  "reader_roles": ["reader"],
   "pathRoles": {
     "GET/account/byId": [
-      "admin", "supervisor", "reader", "librarian"
-    ],
-    "PATCH/account/password": [
-      "reader", "admin", "librarian", "supervisor"
+      "admin", "supervisor", "librarian"
     ],
     "DELETE/account": [
       "admin", "supervisor"
     ],
     "PATCH/account/update": [
-      "admin", "supervisor", "reader", "librarian"
+      "admin", "supervisor"
     ],
     "PATCH/account/roles": [
       "admin", "supervisor"

@@ -85,7 +85,7 @@ export class BookController {
 
     pickBook =  async (req: AuthRequest, res: Response): Promise<void> => {
         const user = await this.accountService.getAccountById(+req.query.readerId!);
-        if(!user.roles.some(role => config.pick_book_access.includes(role)))
+        if(!user.roles.some(role => config.reader_roles.includes(role)))
             throw new HttpError(403,`user with roles ${user.roles} can't pick books`,'@pickBook')
         const result = await this.service.pickBook(req.query.bookId + "", user._id, user.userName);
         res.status(200).json(result);

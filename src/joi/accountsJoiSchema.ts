@@ -16,6 +16,10 @@ export const accountIdSchema = Joi.object({
     userId: Joi.number().min(100000001).max(999999999).integer().required(),
 })
 
+export const accountId2Schema = Joi.object({
+    userId: Joi.number().min(100000001).max(999999999).integer(),
+})
+
 export const accountEditDTOSchema = Joi.object({
     userName: Joi.string().optional(),
     email: Joi.string().email().optional(),

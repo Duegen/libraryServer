@@ -1,6 +1,7 @@
 import {AuthRequest} from "../utils/libTypes.js";
 import {Response, NextFunction} from "express";
 import {HttpError} from "../errorHandler/HttpError.js";
+import {config} from "../configuration/appConfig.js";
 
 export const authorize = (pathRoles: Record<string, string[]>) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -10,11 +11,15 @@ export const authorize = (pathRoles: Record<string, string[]>) => {
         if(!path) {
             next();
         } else{
-            const roles = req.roles;
-            if(roles?.some(role => pathRoles[path].includes(role))) {
+            if(req.query.userId === undefined && config.selfRoutesArr.includes(path))
                 next();
-            }else
-                throw new HttpError(403, '', '@authorization');
+            else {
+                const roles = req.roles;
+                if (roles?.some(role => pathRoles[path].includes(role))) {
+                    next();
+                } else
+                    throw new HttpError(403, '', '@authorization');
+            }
         }
     }
 }
