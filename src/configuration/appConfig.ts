@@ -1,5 +1,4 @@
-// @ts-ignore
-import confJson from "../../config/lib-config.json"// with { type: "json" };
+import confJson from '../../config/lib-config.json' with { type: "json" };
 
 export type AppConfig = {
     port: number;

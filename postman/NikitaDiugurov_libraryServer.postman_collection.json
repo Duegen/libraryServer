@@ -18,12 +18,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "333333333",
+									"value": "555555555",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "333333333",
+									"value": "555555555",
 									"type": "string"
 								}
 							]
@@ -90,12 +90,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -127,12 +127,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -171,12 +171,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -184,7 +184,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/pick?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f&readerId=333333333",
+							"raw": "http://localhost:3050/api/books/pick?bookId=e27b56d6-f1fd-4430-b860-b5a20a28aa78&readerId=555555555",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -198,11 +198,11 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
+									"value": "e27b56d6-f1fd-4430-b860-b5a20a28aa78"
 								},
 								{
 									"key": "readerId",
-									"value": "333333333"
+									"value": "555555555"
 								}
 							]
 						}
@@ -217,12 +217,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -230,7 +230,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/return?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
+							"raw": "http://localhost:3050/api/books/return?bookId=e27b56d6-f1fd-4430-b860-b5a20a28aa78",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -244,7 +244,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
+									"value": "e27b56d6-f1fd-4430-b860-b5a20a28aa78"
 								}
 							]
 						}
@@ -259,12 +259,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -272,7 +272,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books/restore?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
+							"raw": "http://localhost:3050/api/books/restore?bookId=e27b56d6-f1fd-4430-b860-b5a20a28aa78",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -286,7 +286,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
+									"value": "e27b56d6-f1fd-4430-b860-b5a20a28aa78"
 								}
 							]
 						}
@@ -301,12 +301,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -315,7 +315,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"_id\": \"13ec358b-eff2-455d-b4d0-3564d070f55f\",\r\n    \"title\": \"Farenheit 451\",\r\n    \"author\": \"Bradbary\"\r\n}",
+							"raw": "{\r\n    \"_id\": \"e27b56d6-f1fd-4430-b860-b5a20a28aa78\",\r\n    \"title\": \"Farenheit 451\",\r\n    \"author\": \"Bradbary\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -345,12 +345,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "222222222",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -358,7 +358,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3050/api/books?bookId=13ec358b-eff2-455d-b4d0-3564d070f55f",
+							"raw": "http://localhost:3050/api/books?bookId=e27b56d6-f1fd-4430-b860-b5a20a28aa78",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -371,7 +371,7 @@
 							"query": [
 								{
 									"key": "bookId",
-									"value": "13ec358b-eff2-455d-b4d0-3564d070f55f"
+									"value": "e27b56d6-f1fd-4430-b860-b5a20a28aa78"
 								}
 							]
 						}
@@ -476,12 +476,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "qwerty",
+									"value": "111111111",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "100000000",
+									"value": "111111111",
 									"type": "string"
 								}
 							]
@@ -493,7 +493,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/byId?userId=111111111",
+							"raw": "http://localhost:3050/account/byId?userId=333333333",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -506,7 +506,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "111111111"
+									"value": "333333333"
 								}
 							]
 						}
@@ -520,7 +520,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 444444444,\r\n    \"userName\": \"Uri\",\r\n    \"email\": \"uri_email@gmail.com\",\r\n    \"password\": \"444444444\",\r\n    \"birthDate\": \"17.11.2001\"\r\n}",
+							"raw": "{\r\n    \"userId\": 666666666,\r\n    \"userName\": \"Tom\",\r\n    \"email\": \"tom_email@gmail.com\",\r\n    \"password\": \"666666666\",\r\n    \"birthDate\": \"05.05.2009\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -549,12 +549,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "333333333",
+									"value": "qwerty",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "333333333",
+									"value": "100000000",
 									"type": "string"
 								}
 							]
@@ -566,7 +566,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3050/account?userId=333333333",
+							"raw": "http://localhost:3050/account?userId=222222222",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -578,7 +578,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "333333333"
+									"value": "222222222"
 								}
 							]
 						}
@@ -633,16 +633,11 @@
 					"name": "updateAccount",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "111111111",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "111111111",
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6IltcImxpYnJhcmlhblwiLFwidXNlclwiXSIsImlhdCI6MTc2NTEwNTAyMywiZXhwIjoxNzY1MTA4NjIzLCJzdWIiOiI0NDQ0NDQ0NDQifQ.6rTjgvsYpYh9cMEtY9stJFDm0aOg92PkBSj8IToJT-Y",
 									"type": "string"
 								}
 							]
@@ -651,7 +646,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"Shmul\"\r\n}",
+							"raw": "{\r\n    \"userName\": \"Frank\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -659,7 +654,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/update?userId=100000000",
+							"raw": "http://localhost:3050/account/update",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -672,7 +667,8 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "100000000"
+									"value": "222222222",
+									"disabled": true
 								}
 							]
 						}
@@ -687,12 +683,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "111111111",
+									"value": "333333333",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "111111111",
+									"value": "333333333",
 									"type": "string"
 								}
 							]
@@ -701,7 +697,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roles\": [\"librarian\"]\r\n}",
+							"raw": "{\r\n    \"roles\": [\"librarian\", \"user\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -709,7 +705,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3050/account/roles?userId=222222222",
+							"raw": "http://localhost:3050/account/roles?userId=555555555",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -722,8 +718,37 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "222222222"
+									"value": "555555555"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"444444444\",\r\n    \"password\": \"444444444\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3050/account/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3050",
+							"path": [
+								"account",
+								"login"
 							]
 						}
 					},

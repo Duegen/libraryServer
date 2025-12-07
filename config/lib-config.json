@@ -23,7 +23,7 @@
     "premium_user": -1
   },
   "default_rate_limit": 5,
-  "anonymous_rate_limit": 1,
+  "anonymous_rate_limit": 5,
   "get_books_info_level": 2,
   "reader_roles": ["reader"],
   "pathRoles": {

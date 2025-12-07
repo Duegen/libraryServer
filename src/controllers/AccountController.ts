@@ -12,7 +12,8 @@ class AccountController {
     setRoles = async (req: AuthRequest, res: Response) => {
         const newRoles: string[] =  req.body.roles;
         const userId = +req.query.userId!;
-        if(req.accessLevel! <= getAccessLevel(newRoles))
+        const user = await this.service.getAccountById(userId);
+        if(req.accessLevel! <= getAccessLevel(newRoles) || req.accessLevel! <= getAccessLevel(user.roles))
             throw new HttpError(403, '', '@setRoles');
         const userResult = await this.service.setAccountRole(userId, newRoles);
         res.status(200).json(userResult);
