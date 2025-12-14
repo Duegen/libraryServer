@@ -1,14 +1,10 @@
 import {BookService} from "./iBookService.js";
-import {Book, BookEdit, BookLite, BookStatus} from "../model/book.js";
+import {Book, BookEdit, BookStatus} from "../model/book.js";
 import {booksDatabase} from "../app.js";
 import * as mongoose from "mongoose";
-import {v4 as uuidv4} from 'uuid';
 import {HttpError} from "../errorHandler/HttpError.js";
-import {AccountService} from "./iAccountService.js";
-import {accountServiceMongo} from "./AccountServiceImpMongo.js";
 
-class BookServiceImpMongo implements BookService {
-    private service: AccountService = accountServiceMongo;
+export class BookServiceImpMongo implements BookService {
 
     async getBooks(options: Object): Promise<Book[]>{
         const model = booksDatabase as mongoose.Model<Book>
@@ -37,8 +33,14 @@ class BookServiceImpMongo implements BookService {
     }
 
     async addBook(book: Book): Promise<void> {
-        const model = booksDatabase as mongoose.Model<Book>;
-        await model.create({...book, _id: uuidv4()}).catch((err) => {
+        const database = booksDatabase as mongoose.Model<Book>;
+        const result = await database.findById(book._id).then(doc => doc)
+            .catch((err) => {
+                throw new Error('database error: ' + err.message + '@addBook');
+            });
+        if (result)
+            throw new HttpError(404, `duplicated bookId ${book._id}, book not added`, '@addBook');
+        await database.create({...book, _id: book._id}).catch((err) => {
             throw new Error('database error: ' + err.message + '@addBook')
         });
     }
@@ -126,6 +128,8 @@ class BookServiceImpMongo implements BookService {
             throw new HttpError(409, `book with id '${bookId}' is not on hand and can't be returned`,`@returnBook`)
         bookDoc.status = BookStatus.IN_STOCK;
         const index = bookDoc.pickList.findIndex(list => !list.returnDate)
+        if(index === -1)
+            throw new HttpError(409, `pick record for book with id '${bookId}' is not found`,`@returnBook`)
         bookDoc.pickList[index].returnDate = new Date().toLocaleDateString();
         await bookDoc.save().then(() => {
             return Promise.resolve();

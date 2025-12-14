@@ -35,7 +35,7 @@ class AccountController {
             if (req.accessLevel! < getAccessLevel(user.roles))
                 throw new HttpError(403, '', '@getAccountById');
         }
-        const userResult = await this.service.getAccount(userId, '@getAccountById');
+        const userResult = await this.service.getAccountById(userId);
         res.json(userResult);
         loggerWinston.info(`userId: ${req.userId}@account with id ${userResult._id} is responsed@getAccountById`)
     };

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import {v4 as uuidv4} from 'uuid';
 import {config} from "../configuration/appConfig.js";
+import {User} from "../model/user.js";
 
 const pickListSchema = new mongoose.Schema({
     readerId: {type: Number, min: 100000000, max: 999999999, required: true},
