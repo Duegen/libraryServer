@@ -2,9 +2,6 @@
   "name": "ts-template",
   "version": "1.0.0",
   "main": "index.js",
-  "files": [
-    "!build/tests"
-  ],
   "scripts": {
     "test": "jest",
     "start": "rimraf ./build && tsc && node ./build/src/app.js",
