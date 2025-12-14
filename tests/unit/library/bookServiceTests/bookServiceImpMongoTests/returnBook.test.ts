@@ -1,13 +1,13 @@
-jest.mock('../../../../src/app.js', () => ({
+jest.mock('../../../../../src/app.js', () => ({
     booksDatabase: {
         findById: jest.fn(),
     },
 }));
 
 import mongoose from "mongoose";
-import {BookServiceImpMongo} from "../../../../src/service/BookServiceImpMongo.js";
-import {booksDatabase} from "../../../../src/app.js";
-import {Book, BookStatus} from "../../../../src/model/book.js";
+import {BookServiceImpMongo} from "../../../../../src/service/BookServiceImpMongo.js";
+import {booksDatabase} from "../../../../../src/app.js";
+import {Book, BookStatus} from "../../../../../src/model/book.js";
 
 describe('BookServiceImpMongo.returnBook', () => {
     const service = new BookServiceImpMongo()
@@ -73,7 +73,16 @@ describe('BookServiceImpMongo.returnBook', () => {
         };
         const mockSave = jest.fn().mockResolvedValue(undefined);
         (database.findById as jest.Mock).mockResolvedValue({...book, save: mockSave});
-        await expect(service.returnBook(bookId)).resolves.toBeUndefined();
+        const result = await service.returnBook(bookId);
+        expect(result).toEqual({
+            status: BookStatus.IN_STOCK,
+            pickList: [{
+                readerId: 12345,
+                readerName: 'readerName',
+                pickDate: '14.12.2025',
+                returnDate: new Date().toLocaleDateString()
+            }],
+            save: mockSave});
         expect(database.findById).toHaveBeenCalledWith(bookId);
     })
 })

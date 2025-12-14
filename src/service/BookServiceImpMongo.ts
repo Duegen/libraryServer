@@ -39,7 +39,7 @@ export class BookServiceImpMongo implements BookService {
                 throw new Error('database error: ' + err.message + '@addBook');
             });
         if (result)
-            throw new HttpError(404, `duplicated bookId ${book._id}, book not added`, '@addBook');
+            throw new HttpError(409, `duplicated bookId ${book._id}, book not added`, '@addBook');
         await database.create({...book, _id: book._id}).catch((err) => {
             throw new Error('database error: ' + err.message + '@addBook')
         });
@@ -100,7 +100,7 @@ export class BookServiceImpMongo implements BookService {
         return Promise.resolve(bookDoc as Book);
     }
 
-    async pickBook(bookId: string, readerId: number, readerName: string): Promise<void> {
+    async pickBook(bookId: string, readerId: number, readerName: string):Promise<Book> {
         const bookDoc = await this.getBookById(bookId, '@pickBook');
         if (bookDoc.status === BookStatus.REMOVED)
             throw new HttpError(409, `book with id ${bookId} is removed and can't be picked`,`@pickBook`);
@@ -113,14 +113,13 @@ export class BookServiceImpMongo implements BookService {
             pickDate: new Date().toLocaleDateString(),
             returnDate: null
         })
-        await bookDoc.save().then(() => {
-            return Promise.resolve();
-        }).catch(err => {
+        await bookDoc.save().catch(err => {
             throw new Error('database error: ' + err.message + '@pickBook');
         });
+        return Promise.resolve(bookDoc as Book);
     }
 
-    async returnBook(bookId: string): Promise<void> {
+    async returnBook(bookId: string): Promise<Book> {
         const bookDoc = await this.getBookById(bookId, '@returnBook');
         if (bookDoc.status === BookStatus.REMOVED)
             throw new HttpError(409, `book with id '${bookId}' is removed and can't be returned`,`@returnBook`)
@@ -131,11 +130,10 @@ export class BookServiceImpMongo implements BookService {
         if(index === -1)
             throw new HttpError(409, `pick record for book with id '${bookId}' is not found`,`@returnBook`)
         bookDoc.pickList[index].returnDate = new Date().toLocaleDateString();
-        await bookDoc.save().then(() => {
-            return Promise.resolve();
-        }).catch(err => {
+        await bookDoc.save().catch(err => {
             throw new Error('database error: ' + err.message + '@returnBook');
         });
+        return Promise.resolve(bookDoc as Book);
     }
 }
 

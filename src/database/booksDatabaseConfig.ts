@@ -4,7 +4,7 @@ import {bookMongoShema, mongoConnect} from "./databaseMongoConnect.js";
 import {bookServiceSql} from "../service/BookServiceImpSql.js";
 import {bookServiceMongo} from "../service/BookServiceImpMongo.js";
 import {JSONConnect} from "./booksDatabaseJSONConnect.js";
-import {bookServiceJSON} from "../service/BookServiceJSON.js";
+import {bookServiceJSON} from "../service/BookServiceImpJSON.js";
 import {config} from "../configuration/appConfig.js";
 
 dotenv.config({quiet: true});

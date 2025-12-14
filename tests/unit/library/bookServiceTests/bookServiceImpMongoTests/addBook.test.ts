@@ -1,4 +1,4 @@
-jest.mock('../../../../src/app.js', () => ({
+jest.mock('../../../../../src/app.js', () => ({
     booksDatabase: {
         findById: jest.fn(),
         create: jest.fn(),
@@ -6,9 +6,9 @@ jest.mock('../../../../src/app.js', () => ({
 }));
 
 import mongoose from "mongoose";
-import {BookServiceImpMongo} from "../../../../src/service/BookServiceImpMongo.js";
-import {booksDatabase} from "../../../../src/app.js";
-import {Book} from "../../../../src/model/book.js";
+import {BookServiceImpMongo} from "../../../../../src/service/BookServiceImpMongo.js";
+import {booksDatabase} from "../../../../../src/app.js";
+import {Book} from "../../../../../src/model/book.js";
 
 describe('BookServiceImpMongo.addBook', () => {
     const service = new BookServiceImpMongo()
