@@ -10,7 +10,7 @@ export class BookServiceImpJSON implements BookService{
         const jsonDB = booksDatabase as JsonDB;
         const index = await jsonDB.getIndex('/books', book._id!, '_id');
         if(index !== -1)
-            throw new HttpError(404, `duplicated bookId ${book._id}, book not added`, '@addBook');
+            throw new HttpError(404, `duplicated bookId '${book._id}', book not added`, '@addBook');
         await jsonDB.push(`/books[]`, book).catch( err => {
             throw new Error('database error: ' + err.message + '@addBooks');
         });
@@ -59,12 +59,12 @@ export class BookServiceImpJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(404, `book with id ${bookId} is not found`, '@pickBook');
+                throw new HttpError(404, `book with id '${bookId}' is not found`, '@pickBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.ON_HAND)
-                throw new HttpError(409, `book with id ${bookId} is already on hand and can't be picked`, '@pickBook');
+                throw new HttpError(409, `book with id '${bookId}' is already on hand and can't be picked`, '@pickBook');
             if (book.status === BookStatus.REMOVED)
-                throw new HttpError(409, `book with id ${bookId} is removed and can't be picked`, '@pickBook');
+                throw new HttpError(409, `book with id '${bookId}' is removed and can't be picked`, '@pickBook');
             book.status = BookStatus.ON_HAND;
             book.pickList.push({
                 readerId: readerId,
@@ -88,7 +88,7 @@ export class BookServiceImpJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(404, `book with id ${bookId} is not found`,'@returnBook')
+                throw new HttpError(404, `book with id '${bookId}' is not found`,'@returnBook')
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.IN_STOCK)
                 throw new HttpError(409, `book with id '${bookId}' is not on hand and can't be returned`,'@returnBook');
@@ -114,7 +114,7 @@ export class BookServiceImpJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', data._id, '_id');
             if (index === -1)
-                throw new HttpError(404, `book with id ${data._id} is not found`, '@editBook');
+                throw new HttpError(404, `book with id '${data._id}' is not found`, '@editBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.REMOVED)
                 throw new HttpError(409, `book with id '${data._id}' is removed and can't be edited`, '@editBook');
@@ -137,10 +137,10 @@ export class BookServiceImpJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(404, `book with id ${bookId} is not found`, '@removeBook');
+                throw new HttpError(404, `book with id '${bookId}' is not found`, '@removeBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.ON_HAND)
-                throw new HttpError(409, `book with id ${bookId} is already on hand and can't be removed`, '@removeBook');
+                throw new HttpError(409, `book with id '${bookId}' is already on hand and can't be removed`, '@removeBook');
             if (book.status === BookStatus.REMOVED) {
                 book.status = BookStatus.DELETED;
                 await jsonDB.delete(`/books[${index}]`);
@@ -163,7 +163,7 @@ export class BookServiceImpJSON implements BookService{
             const jsonDB = booksDatabase as JsonDB;
             const index = await jsonDB.getIndex('/books', bookId, '_id');
             if (index === -1)
-                throw new HttpError(404, `book with id ${bookId} is not found`, '@restoreBook');
+                throw new HttpError(404, `book with id '${bookId}' is not found`, '@restoreBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status !== BookStatus.REMOVED)
                 throw new HttpError(409, `book with id '${bookId}' is not removed and can't be restored`, '@restoreBook');

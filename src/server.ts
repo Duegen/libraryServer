@@ -9,6 +9,8 @@ import {accountServiceMongo} from "./service/AccountServiceImpMongo.js";
 import {authorize} from "./middleware/authorization.js";
 import {loggedInLimit, unloggedInLimit} from "./middleware/rateLimit.js";
 import {AuthRequest} from "./utils/libTypes.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerDoc from "../docs/libraryServer-openapi.json" with {type: "json"}
 
 export const launchServer = async () => {
     const app = express();
@@ -17,7 +19,12 @@ export const launchServer = async () => {
         console.log(`Server runs at http://localhost:${config.port}`)
         loggerWinston.warn("server successfully started");
     });
-
+    //============OpenApi Docs===========================
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, {
+        swaggerOptions: {
+            supportedSubmitMethods: []
+        }
+    }));
     //============middleware========
     app.use(authenticate(accountServiceMongo));
     app.use((req: AuthRequest, res, next) => {
@@ -27,6 +34,7 @@ export const launchServer = async () => {
     app.use(skipRoutes(config.skipRoutesArr));
     app.use(authorize(config.pathRoles as Record<string, string[]>))
     app.use(express.json())
+
     //============routers===========
     app.use('/api', apiRouter)
     app.use('/account', accountRouter)

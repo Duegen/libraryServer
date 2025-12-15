@@ -26,7 +26,7 @@ describe('BookServiceImpJSON.restoreBook', () => {
     test('failed test: book not found', async () => {
         (database.getIndex as jest.Mock).mockResolvedValue(-1);
         await expect(service.restoreBook(bookId))
-            .rejects.toThrow(`book with id ${bookId} is not found`);
+            .rejects.toThrow(`book with id '${bookId}' is not found`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
     })
 
@@ -36,6 +36,7 @@ describe('BookServiceImpJSON.restoreBook', () => {
         await expect(service.restoreBook(bookId))
             .rejects.toThrow(`book with id '${bookId}' is not removed and can't be restored`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
     })
 
     test('passed test: book is restored', async () => {
@@ -45,5 +46,7 @@ describe('BookServiceImpJSON.restoreBook', () => {
         const result = await service.restoreBook(bookId);
         expect(result).toEqual({...book,status: BookStatus.IN_STOCK});
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`);
+        expect(database.push).toHaveBeenCalledWith(`/books[${0}]`,{...book, status: BookStatus.IN_STOCK});
     })
 })

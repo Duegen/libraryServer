@@ -1,9 +1,10 @@
 {
   "port": 3050,
-  "database_mode": "MONGO",
+  "database_mode": "Mongo",
   "skipRoutesArr": [
     "POST/account",
-    "POST/account/login"
+    "POST/account/login",
+    "GET/docs/"
   ],
   "selfRoutesArr": [
     "GET/account/byId",
@@ -23,7 +24,7 @@
     "premium_user": -1
   },
   "default_rate_limit": 5,
-  "anonymous_rate_limit": 5,
+  "anonymous_rate_limit": 60,
   "get_books_info_level": 2,
   "reader_roles": ["reader"],
   "pathRoles": {

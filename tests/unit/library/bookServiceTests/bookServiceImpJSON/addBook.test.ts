@@ -23,7 +23,7 @@ describe('BookServiceImpJSON.addBook', () => {
 
     test('failed test: duplicated bookId', async () => {
         (database.getIndex as jest.Mock).mockResolvedValue(0);
-        await expect(service.addBook(book as Book)).rejects.toThrow(`duplicated bookId ${book._id}, book not added`)
+        await expect(service.addBook(book as Book)).rejects.toThrow(`duplicated bookId '${book._id}', book not added`)
         expect(database.getIndex).toHaveBeenCalledWith('/books', book._id!, '_id');
     })
 

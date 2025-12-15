@@ -27,7 +27,7 @@ describe('BookServiceImpJSON.pickBook', () => {
     test('failed test: book not found', async () => {
         (database.getIndex as jest.Mock).mockResolvedValue(-1);
         await expect(service.pickBook(bookId, readerId, readerName))
-            .rejects.toThrow(`book with id ${bookId} is not found`);
+            .rejects.toThrow(`book with id '${bookId}' is not found`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
     })
 
@@ -35,16 +35,18 @@ describe('BookServiceImpJSON.pickBook', () => {
         (database.getIndex as jest.Mock).mockResolvedValue(0);
         (database.getData as jest.Mock).mockResolvedValue({...book,  status: BookStatus.REMOVED});
         await expect(service.pickBook(bookId, readerId, readerName))
-            .rejects.toThrow(`book with id ${bookId} is removed and can't be picked`);
+            .rejects.toThrow(`book with id '${bookId}' is removed and can't be picked`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
     })
 
     test('failed test: book is on hand', async () => {
         (database.getIndex as jest.Mock).mockResolvedValue(0);
         (database.getData as jest.Mock).mockResolvedValue({...book,  status: BookStatus.ON_HAND});
         await expect(service.pickBook(bookId, readerId, readerName))
-            .rejects.toThrow(`book with id ${bookId} is already on hand`);
+            .rejects.toThrow(`book with id '${bookId}' is already on hand`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
     })
 
     test('passed test: book is picked', async () => {
@@ -64,5 +66,7 @@ describe('BookServiceImpJSON.pickBook', () => {
             pickList: [pickRecord],
         })
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
+        expect(database.push).toHaveBeenCalledWith(`/books[${0}]`, {...book, status: BookStatus.ON_HAND})
     })
 })

@@ -25,7 +25,10 @@ describe('BookServiceImpJSON.getBooksByGenre', () => {
         (database.count as jest.Mock).mockResolvedValue(1);
         (database.getData as jest.Mock).mockResolvedValueOnce(genre);
         (database.getData as jest.Mock).mockResolvedValueOnce(books[0]);
-        await expect(service.getBooksByAuthor(genre)).resolves.toEqual(books);
+        await expect(service.getBooksByGenre(genre)).resolves.toEqual(books);
         expect(database.count).toHaveBeenCalledWith('/books');
+        expect(database.getData).toHaveBeenNthCalledWith
+            (1, '/books' + `[${0}]/` + 'genre')
+        expect(database.getData).toHaveBeenNthCalledWith(2, '/books' + `[${0}]/`)
     })
 })

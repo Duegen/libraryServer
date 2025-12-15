@@ -26,7 +26,7 @@ describe('BookServiceImpJSON.removeBook', () => {
     test('failed test: book not found', async () => {
         (database.getIndex as jest.Mock).mockResolvedValue(-1);
         await expect(service.removeBook(bookId))
-            .rejects.toThrow(`book with id ${bookId} is not found`);
+            .rejects.toThrow(`book with id '${bookId}' is not found`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
     })
 
@@ -34,8 +34,9 @@ describe('BookServiceImpJSON.removeBook', () => {
         (database.getIndex as jest.Mock).mockResolvedValue(0);
         (database.getData as jest.Mock).mockResolvedValue({...book,  status: BookStatus.ON_HAND});
         await expect(service.removeBook(bookId))
-            .rejects.toThrow(`book with id ${bookId} is already on hand`);
+            .rejects.toThrow(`book with id '${bookId}' is already on hand`);
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
     })
 
     test('passed test: book is removed', async () => {
@@ -45,6 +46,8 @@ describe('BookServiceImpJSON.removeBook', () => {
         const result = await service.removeBook(bookId);
         expect(result).toEqual({...book,status: BookStatus.REMOVED});
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
+        expect(database.push).toHaveBeenCalledWith(`/books[${0}]`, {...book, status: BookStatus.REMOVED})
     })
 
     test('passed test: book is deleted', async () => {
@@ -54,5 +57,7 @@ describe('BookServiceImpJSON.removeBook', () => {
         const result = await service.removeBook(bookId);
         expect(result).toEqual({...book,status: BookStatus.DELETED});
         expect(database.getIndex).toHaveBeenCalledWith('/books', bookId, '_id');
+        expect(database.getData).toHaveBeenCalledWith(`/books[${0}]`)
+        expect(database.delete).toHaveBeenCalledWith(`/books[${0}]`)
     })
 })

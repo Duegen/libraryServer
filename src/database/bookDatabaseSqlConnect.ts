@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import mysql, {Pool} from "mysql2/promise";
 
 const tableBooks = 'CREATE TABLE IF NOT EXISTS books(' +
-    'bookId varchar(36) not null PRIMARY KEY,' +
+    '_id varchar(36) not null PRIMARY KEY,' +
     'title varchar(40) not null default \'No name\',' +
     'author varchar(25) not null default \'Anonymous\',' +
     'genre varchar(10) not null default \'\',' +
@@ -16,7 +16,7 @@ const tableReaders = 'CREATE TABLE IF NOT EXISTS readers(' +
     ');';
 
 const tableBooksReaders = 'CREATE TABLE IF NOT EXISTS books_readers(' +
-    'bookId varchar(36) not null,' +
+    '_id varchar(36) not null,' +
     'readerId int unsigned not null,' +
     'pickDate varchar(10) not null,' +
     'returnDate varchar(10),' +
