@@ -91,9 +91,9 @@ export class BookServiceImpJSON implements BookService{
                 throw new HttpError(404, `book with id ${bookId} is not found`,'@returnBook')
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.IN_STOCK)
-                throw new HttpError(409, `book with id ${bookId} is already in stock and can't be returned`,'@returnBook');
+                throw new HttpError(409, `book with id '${bookId}' is not on hand and can't be returned`,'@returnBook');
             if (book.status === BookStatus.REMOVED)
-                throw new HttpError(409, `book with id ${bookId} is removed and can't be returned`,'@returnBook');
+                throw new HttpError(409, `book with id '${bookId}' is removed and can't be returned`,'@returnBook');
             const pickIndex = book.pickList.findIndex(list => !list.returnDate)
             if(pickIndex === -1)
                 throw new HttpError(409, `pick record for book with id '${bookId}' is not found`,`@returnBook`)
@@ -117,7 +117,7 @@ export class BookServiceImpJSON implements BookService{
                 throw new HttpError(404, `book with id ${data._id} is not found`, '@editBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status === BookStatus.REMOVED)
-                throw new HttpError(409, `book with id ${data._id} is removed and can't be edited`, '@editBook');
+                throw new HttpError(409, `book with id '${data._id}' is removed and can't be edited`, '@editBook');
             book.title = data.title || book.title;
             book.author = data.author || book.author;
             book.genre = data.genre || book.genre;
@@ -166,7 +166,7 @@ export class BookServiceImpJSON implements BookService{
                 throw new HttpError(404, `book with id ${bookId} is not found`, '@restoreBook');
             const book: Book = await jsonDB.getData(`/books[${index}]`);
             if (book.status !== BookStatus.REMOVED)
-                throw new HttpError(409, `book with id ${bookId} is not removed and can't be restored`, '@restoreBook');
+                throw new HttpError(409, `book with id '${bookId}' is not removed and can't be restored`, '@restoreBook');
             book.status = BookStatus.IN_STOCK;
             await jsonDB.push(`/books[${index}]`,book);
             return Promise.resolve(book);
