@@ -1,0 +1,1304 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library server API",
+    "version": "1.0.0",
+    "description": "API for control all library processes with security"
+  },
+  "servers": [{
+    "url": "http://localhost:3050",
+    "description": "Dev local server"
+  }],
+  "paths": {
+    "/account/byId":{
+      "get": {
+        "summary": "Get user account info by id",
+        "description": "Gets user account info by id designation (roles are required) or for yourself (only authentication is required)",
+        "tags": ["Accounting"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "existed user id",
+            "example": 111111111,
+            "schema": {
+              "$ref": "#/components/schemas/user_id"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account was responsed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": 111111111,
+                  "userName": "user_name",
+                  "email": "user_email@gmail.com",
+                  "passHash": "pass_hash",
+                  "birthDate": "01.01.2000",
+                  "roles": ["role"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - userId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'userId' must be a number@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "text/plain": {
+                "example": "account with id <userId> is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account": {
+      "post": {
+        "summary": "Add new user account",
+        "description": "Adds new user account without authorization",
+        "tags": ["Accounting"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_dto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Account was created"
+          },
+          "400": {
+            "description": "bad request - request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "409": {
+            "description": "Id conflict",
+            "content": {
+              "text/plain": {
+                "example": "duplicated user id <userId>, account not created"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user account",
+        "description": "Deletes existed user account by id designation, roles required",
+        "tags": ["Accounting"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "existed user id",
+            "example": 111111111,
+            "schema": {
+              "$ref": "#/components/schemas/user_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account was deleted",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": 111111111,
+                  "userName": "user_name",
+                  "email": "user_email@gmail.com",
+                  "passHash": "pass_hash",
+                  "birthDate": "01.01.2000",
+                  "roles": ["role"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - userId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'userId' must be a number@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "text/plain": {
+                "example": "account with id <userId> is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/login": {
+      "post": {
+        "summary": "Receive JWT token",
+        "description": "Login using user id and password and receive JWT token",
+        "tags": ["Accounting"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token was responsed",
+            "content": {
+              "text/plain": {
+                "example": "new JWT token"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated, wrong credentials in request body",
+            "content": {
+              "text/plain": {
+                "example": "wrong credentials"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/account/password": {
+      "patch": {
+        "summary": "Change user password",
+        "description": "Changes user password, only for yourself, authentication is required",
+        "tags": ["Accounting"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/change_password"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password was changed"
+          },
+          "400": {
+            "description": "bad request - request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "409": {
+            "description": "Old and new password are equal",
+            "content": {
+              "text/plain": {
+                "example": "old and new password must be different"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/roles": {
+      "patch": {
+        "summary": "Update user roles",
+        "description": "Updates user roles, roles are required",
+        "tags": ["Accounting"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roles"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "existed user id",
+            "example": 111111111,
+            "schema": {
+              "$ref": "#/components/schemas/user_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User roles was updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": 111111111,
+                  "userName": "user_name",
+                  "email": "user_email@gmail.com",
+                  "passHash": "pass_hash",
+                  "birthDate": "01.01.2000",
+                  "roles": ["role"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - userId or request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "text/plain": {
+                "example": "account with id <userId> is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/update": {
+      "patch": {
+        "summary": "Updates user account info",
+        "description": "Update user account info by id designation (roles are required) or for yourself (only authentication is required)",
+        "tags": ["Accounting"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/update_user_dto"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "existed user id",
+            "example": 111111111,
+            "schema": {
+              "$ref": "#/components/schemas/user_id"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User account info was updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": 111111111,
+                  "userName": "user_name",
+                  "email": "user_email@gmail.com",
+                  "passHash": "pass_hash",
+                  "birthDate": "01.01.2000",
+                  "roles": ["role"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - userId or request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "text/plain": {
+                "example": "account with id <userId> is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/books": {
+      "post": {
+        "summary": "Add new book",
+        "description": "Adds new book to library database, roles required",
+        "tags": ["Library"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book_dto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Book was added"
+          },
+          "400": {
+            "description": "bad request - request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "409": {
+            "description": "Id conflict",
+            "content": {
+              "text/plain": {
+                "example": "duplicated book id <id>, book not added"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all books",
+        "description": "Responses all books from library database, roles required",
+        "tags": ["Library"],
+        "responses": {
+          "200": {
+            "description": "All books was responsed",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete/remove book",
+        "description": "Deletes book from database or marks book as removed, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "description": "existed book id",
+            "example": "some_bookId",
+            "schema": {
+              "$ref": "#/components/schemas/book_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book was deleted/marked as removed",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "removed",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - bookId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'bookId' is required@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Book is on hand",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is on hand and can't be removed"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update book info",
+        "description": "Updates book info, roles required",
+        "tags": ["Library"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book_update"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Book info was updated",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - request body is invalid",
+            "content": {
+              "text/plain": {
+                "example": "invalid JSON in POST request"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Book is removed",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is removed and can't be edited"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/genres/{genre}": {
+      "get": {
+        "summary": "Get books by genre",
+        "description": "Responses all books from library database with certain genre, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "fantasy"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All books with certain genre was responsed",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/authors/{author}": {
+      "get": {
+        "summary": "Get books by author",
+        "description": "Responses all books from library database with certain author, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "author",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "Tolkien"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All books with certain author was responsed",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/restore": {
+      "patch": {
+        "summary": "Restore book",
+        "description": "Restores removed book, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "description": "existed book id",
+            "example": "some_bookId",
+            "schema": {
+              "$ref": "#/components/schemas/book_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book is restored",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": []
+                }]
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - bookId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'bookId' is required@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Book is not removed",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not removed and can't be restored"
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/pick": {
+      "patch": {
+        "summary": "Pick book",
+        "description": "Picks book from the library, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "description": "existed book id",
+            "example": "some_bookId",
+            "schema": {
+              "$ref": "#/components/schemas/book_id"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "readerId",
+            "description": "existed reader id",
+            "example": 123456789,
+            "schema": {
+              "$ref": "#/components/schemas/user_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book is picked",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "on_hand",
+                  "pickList": [{
+                    "readerId": 123456789,
+                    "readerName": "John",
+                    "pickDate": "01.01.2025",
+                    "returnDate": null
+                  }]
+                }]
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - bookId ore readerId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'bookId' is required@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized",
+            "content": {
+              "text/plain": {
+                "example": "user with id <userId> can't pick books"
+              }
+            }
+          },
+          "404": {
+            "description": "Book not found or user not found",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Book is removed or on hand",
+            "content": {
+              "text/plain": {
+                "examples": {
+                  "book is removed": {
+                    "value": "book with id <bookId> is removed and can't be picked"
+                  },
+                  "book is on hand": {
+                    "value": "book with id <bookId> is on hand and can't be picked"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/return": {
+      "patch": {
+        "summary": "Return book",
+        "description": "Returns book to the library, roles required",
+        "tags": ["Library"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "description": "existed book id",
+            "example": "some_bookId",
+            "schema": {
+              "$ref": "#/components/schemas/book_id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book is returned",
+            "content": {
+              "application/json": {
+                "example": [{
+                  "_id": "bookId",
+                  "title": "Lord of the rings",
+                  "author": "Tolkien",
+                  "genre": "fantasy",
+                  "year": 1953,
+                  "status": "in_stock",
+                  "pickList": [{
+                    "readerId": 123456789,
+                    "readerName": "John",
+                    "pickDate": "01.01.2025",
+                    "returnDate": "01.02.2025"
+                  }]
+                }]
+              }
+            }
+          },
+          "400": {
+            "description": "bad request - bookId ore readerId is invalid",
+            "content": {
+              "text/plain": {
+                "example": "'bookId' is required@validation"
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "text/plain": {
+                "example": "book with id <bookId> is not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Book is removed or in stock",
+            "content": {
+              "text/plain": {
+                "examples": {
+                  "book is removed": {
+                    "value": "book with id <bookId> is removed and can't be picked"
+                  },
+                  "book is in stock": {
+                    "value": "book with id <bookId> is not on hand and can't be returned"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logger": {
+      "get": {
+        "summary": "Response last log file",
+        "description": "Responses last log file, roles required",
+        "tags": ["Logger"],
+        "responses": {
+          "200": {
+            "description": "Last log file is responced"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Log directory or log files not found",
+            "content": {
+              "text/plain": {
+                "examples": {
+                  "log directory not found": {
+                    "value": "log directory not found"
+                  },
+                  "log files not found": {
+                    "value": "log files not found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "unknown server Error: database error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logger/dates": {
+      "get": {
+        "summary": "Response log file for certain date",
+        "description": "Response log file for certain date, roles required",
+        "tags": ["Logger"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "example": "01.01.2025",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{2}\\.\\d{2}\\.\\d{4}$"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log file for certain date is responced"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Log directory or log file not found",
+            "content": {
+              "text/plain": {
+                "examples": {
+                  "log directory not found": {
+                    "value": "log directory not found"
+                  },
+                  "log files not found": {
+                    "value": "log file for date <date> not found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown server errors",
+            "content": {
+              "text/plain": {
+                "example": "log file not found"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user_dto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "example": 123456789,
+            "minimum": 100000000,
+            "maximum": 999999999,
+            "required": true
+          },
+          "userName": {
+            "type": "string",
+            "example": "John",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "example": "john_email@gmail.com",
+            "required": true,
+            "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty",
+            "required": true
+          },
+          "birthDate": {
+            "type": "string",
+            "example": "01.01.2000",
+            "required": true,
+            "pattern": "^\\d{2}\\.\\d{2}\\.\\d{4}$"
+          }
+        }
+      },
+      "book_dto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "book_title",
+            "required": true
+          },
+          "author": {
+            "type": "string",
+            "example": "book_author",
+            "required": true
+          },
+          "genre": {
+            "type": "string",
+            "example": "book_genre",
+            "required": true
+          },
+          "year": {
+            "type": "number",
+            "example": 2000,
+            "required": true
+          },
+          "quantity": {
+            "type": "number",
+            "example": 1000,
+            "required": false
+          }
+        }
+      },
+      "user_id": {
+        "type": "number",
+        "minimum": 100000000,
+        "maximum": 999999999,
+        "required": true
+      },
+      "change_password": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "example": "old_password",
+            "required": true
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "new_password",
+            "required": true
+          }
+
+        }
+      },
+      "update_user_dto": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "example": "John",
+            "required": false
+          },
+          "email": {
+            "type": "string",
+            "example": "john_email@gmail.com",
+            "required": false,
+            "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
+          },
+          "birthDate": {
+            "type": "string",
+            "example": "01.01.2000",
+            "required": false,
+            "pattern": "^\\d{2}\\.\\d{2}\\.\\d{4}$"
+          }
+        }
+      },
+      "roles": {
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minLength": 1,
+            "example": ["role"],
+            "required": true
+          }
+        }
+      },
+      "login": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "minimum": 100000000,
+            "maximum": 999999999,
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "example": "password",
+            "required": true
+          }
+        }
+      },
+      "book_id": {
+        "type": "string",
+        "required": true
+      },
+      "book_update": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "required": false
+          },
+          "author": {
+            "type": "string",
+            "required": false
+          },
+          "genre": {
+            "type": "string",
+            "required": false
+          },
+          "year": {
+            "type": "number",
+            "required": false,
+            "minimum": 1900
+          }
+        }
+      }
+    }
+  }
+}

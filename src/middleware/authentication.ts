@@ -64,9 +64,14 @@ export const authenticate = (service: AccountService) => {
 export const skipRoutes = (skipRoutes: string[]) => {
     return async (request: AuthRequest, response: Response, next: NextFunction) => {
         const route = request.method + request.path + '';
-        if (!request.userId)
-            if (!skipRoutes.includes(route))
-                throw new HttpError(401, 'unauthorized', '@authorization');
+        if (!request.userId){
+            if(!skipRoutes.some(element => {
+                return element === route || route.startsWith(element + '/')
+            }))
+                throw new HttpError(401, '', '@authorization');
+        }
+            // if (!skipRoutes.includes(route))
+            //     throw new HttpError(401, '', '@authorization');
         next()
     }
 }

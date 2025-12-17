@@ -4,7 +4,7 @@
   "skipRoutesArr": [
     "POST/account",
     "POST/account/login",
-    "GET/docs/"
+    "GET/docs"
   ],
   "selfRoutesArr": [
     "GET/account/byId",
@@ -23,8 +23,8 @@
     "user": 5,
     "premium_user": -1
   },
-  "default_rate_limit": 5,
-  "anonymous_rate_limit": 60,
+  "default_rate_limit": 60,
+  "anonymous_rate_limit": 20,
   "get_books_info_level": 2,
   "reader_roles": ["reader"],
   "pathRoles": {

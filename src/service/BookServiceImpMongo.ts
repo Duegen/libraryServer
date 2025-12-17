@@ -60,7 +60,7 @@ export class BookServiceImpMongo implements BookService {
     async removeBook(bookId: string): Promise<Book> {
         const bookDoc = await this.getBookById(bookId, '@removeBook');
         if(bookDoc.status === BookStatus.ON_HAND)
-            throw new HttpError(409, `book with id '${bookId}' is on hand and can't be removed`,`@removeBook`)
+            throw new HttpError(409, `y`,`@removeBook`)
         if(bookDoc.status === BookStatus.REMOVED){
             bookDoc.status = BookStatus.DELETED;
             await bookDoc.deleteOne().catch(err => {

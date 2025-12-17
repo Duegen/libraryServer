@@ -19,12 +19,6 @@ export const launchServer = async () => {
         console.log(`Server runs at http://localhost:${config.port}`)
         loggerWinston.warn("server successfully started");
     });
-    //============OpenApi Docs===========================
-    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, {
-        swaggerOptions: {
-            supportedSubmitMethods: []
-        }
-    }));
     //============middleware========
     app.use(authenticate(accountServiceMongo));
     app.use((req: AuthRequest, res, next) => {
@@ -34,7 +28,12 @@ export const launchServer = async () => {
     app.use(skipRoutes(config.skipRoutesArr));
     app.use(authorize(config.pathRoles as Record<string, string[]>))
     app.use(express.json())
-
+    //============OpenApi Docs===========================
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, {
+        swaggerOptions: {
+            supportedSubmitMethods: []
+        }
+    }));
     //============routers===========
     app.use('/api', apiRouter)
     app.use('/account', accountRouter)

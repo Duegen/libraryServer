@@ -26,7 +26,7 @@ describe("AccountServiceImplMongo.login", () => {
         (accountDatabase.findById as jest.Mock).mockResolvedValue(null);
 
         await expect(service.login(loginData._id, loginData.password))
-            .rejects.toThrow(`account with id ${loginData._id} is not found`);
+            .rejects.toThrow(`wrong credentials`);
         expect(accountDatabase.findById).toHaveBeenCalledWith(loginData._id)
     })
 

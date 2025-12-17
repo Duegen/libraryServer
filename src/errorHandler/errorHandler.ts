@@ -17,7 +17,7 @@ export const errorHandler =
             else if (err instanceof Error)
                 message = 'incorrect request ' + err.message;
             else
-                message = "unknown server Error " + err;
+                message = "unknown server Error: " + err;
             res.status(status).send(message);
             loggerWinston.error(message);
         }

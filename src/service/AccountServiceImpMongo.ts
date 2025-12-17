@@ -15,7 +15,7 @@ export class AccountServiceImpMongo implements AccountService {
                 throw new Error('database error: ' + err.message + '@login')
             });
         if (!userDoc)
-            throw new HttpError(404, `account with id ${userId} is not found`, '@login');
+            throw new HttpError(401, "wrong credentials", '@login');
         if (!bcrypt.compareSync(password, userDoc.passHash))
             throw new HttpError(401, "wrong credentials", '@login');
         return getJWT(userId, userDoc.roles);
@@ -57,7 +57,7 @@ export class AccountServiceImpMongo implements AccountService {
                 throw new Error('database error: ' + err.message + '@createAccount');
             });
         if (result)
-            throw new HttpError(404, `duplicated userId ${user._id}, account not created`, '@createAccount');
+            throw new HttpError(409, `duplicated userId ${user._id}, account not created`, '@createAccount');
         await accountDatabase.create({...user, _id: user._id}).catch(err => {
             throw new Error('database error: ' + err.message + '@createAccount')
         })

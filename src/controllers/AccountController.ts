@@ -77,7 +77,7 @@ class AccountController {
     login = async (req: AuthRequest, res: Response) => {
         const {userId, password} =  req.body;
         const token = await this.service.login(userId,password);
-        res.send(token);
+        res.status(200).send(token);
         loggerWinston.info(`userId: ${userId}@user with id ${userId} login@login`)
     }
 
